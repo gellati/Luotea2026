@@ -16,7 +16,9 @@
     --amber: #f5a623;
     --amber-dim: #f5a62322;
     --red: #e05c5c;
+    --red-dim: #e05c5c22;
     --blue: #4a9eff;
+    --blue-dim: #4a9eff22;
     --text: #e8edf2;
     --muted: #5a7080;
     --mono: 'DM Mono', monospace;
@@ -34,7 +36,6 @@
     overflow-x: hidden;
   }
 
-  /* GRID BACKGROUND */
   body::before {
     content:'';
     position:fixed; inset:0;
@@ -49,7 +50,6 @@
 
   .wrap { position:relative; z-index:1; max-width:1280px; margin:0 auto; padding:24px; }
 
-  /* HEADER */
   header {
     display:flex; align-items:center; justify-content:space-between;
     padding-bottom:20px; border-bottom:1px solid var(--border);
@@ -80,31 +80,169 @@
 
   .clock { font-family:var(--mono); font-size:13px; color:var(--muted); }
 
-  /* NOTIFICATION BADGES */
   .badge-container { display:flex; align-items:center; gap:8px; }
   .badge {
-    position:relative; width:44px; height:44px; border-radius:50%;
+    position:relative; width:44px; height:44px; border-radius:12px;
     background:var(--surface2); border:1px solid var(--border);
     display:flex; align-items:center; justify-content:center;
     cursor:pointer; transition:all 0.3s;
-    font-size:12px; font-weight:600; font-family:var(--mono);
+    color: var(--muted);
   }
-  .badge:hover { background:var(--surface); border-color:var(--red); transform:scale(1.05); }
-  .badge.alert { color:var(--red); }
+  .badge:hover { background:var(--surface); border-color:var(--text); transform:translateY(-2px); color: var(--text); }
+  .badge.alert { color: var(--red); border-color: var(--red); }
+  .badge-count {
+    position: absolute;
+    top: -4px; right: -4px;
+    min-width: 18px; height: 18px;
+    border-radius: 9px;
+    background: var(--red);
+    color: #fff;
+    font-size: 10px; font-weight: 700;
+    font-family: var(--mono);
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 5px;
+    border: 2px solid var(--bg);
+  }
+  .badge-count.warn { background: var(--amber); color: #000; }
   .badge-popup {
-    position:fixed; top:70px; right:20px; width:320px;
+    position:fixed; top:70px; right:20px; width:360px;
     background:var(--surface); border:1px solid var(--border);
     border-radius:12px; z-index:1000; opacity:0; pointer-events:none;
     transform:translateY(-10px); transition:all 0.3s;
-    box-shadow:0 8px 32px rgba(0,0,0,0.5); max-height:400px; overflow-y:auto;
+    box-shadow:0 8px 32px rgba(0,0,0,0.5); max-height:480px; overflow-y:auto;
   }
   .badge-popup.show { opacity:1; pointer-events:auto; transform:translateY(0); }
-  .badge-popup-header { padding:16px; border-bottom:1px solid var(--border); font-weight:600; font-size:13px; }
-  .badge-popup-item { padding:12px 16px; border-bottom:1px solid var(--border); font-size:12px; cursor:pointer; transition:background 0.2s; }
-  .badge-popup-item:hover { background:var(--surface2); }
-  .badge-popup-item:last-child { border-bottom:none; }
+  .badge-popup-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600; font-size: 13px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0;
+    background: var(--surface);
+    z-index: 1;
+  }
+  .popup-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .popup-item:hover { background: var(--surface2); }
+  .popup-item:last-child { border-bottom: none; }
+  .popup-item-icon {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .popup-item-content { flex: 1; min-width: 0; }
+  .popup-item-title {
+    font-size: 12px; font-weight: 600;
+    margin-bottom: 2px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .popup-item-msg {
+    font-size: 11px; color: var(--muted);
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+  .popup-item-meta {
+    display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+    font-size: 10px; font-family: var(--mono);
+    color: var(--muted);
+  }
 
-  /* NAVBAR */
+  .building-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-family: var(--mono);
+    padding: 3px 8px; border-radius: 4px;
+    font-weight: 600; letter-spacing: 0.05em;
+  }
+  .building-tag.A { background: var(--teal-dim); border: 1px solid var(--teal); color: var(--teal); }
+  .building-tag.B { background: var(--blue-dim); border: 1px solid var(--blue); color: var(--blue); }
+
+  .notif-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .notif-card.critical {
+    border-color: var(--red);
+    box-shadow: 0 0 0 1px var(--red-dim);
+  }
+  .notif-header {
+    padding: 16px 20px;
+    display: flex; align-items: flex-start; gap: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .notif-header:hover { background: var(--surface2); }
+  .notif-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .notif-icon.sensor { background: var(--red-dim); color: var(--red); }
+  .notif-icon.anomaly { background: var(--amber-dim); color: var(--amber); }
+  .notif-icon.maintenance { background: var(--blue-dim); color: var(--blue); }
+  .notif-meta {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .notif-type {
+    font-size: 10px; font-family: var(--mono);
+    color: var(--muted); letter-spacing: 0.05em;
+  }
+  .notif-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .notif-msg { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .notif-arrow {
+    font-size: 14px; color: var(--muted);
+    flex-shrink: 0;
+    transition: transform 0.3s;
+    align-self: center;
+  }
+
+  .notif-details {
+    padding: 16px 20px 18px 70px;
+    border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 14px;
+    animation: fadeIn 0.3s ease;
+  }
+  .notif-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .detail-block {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+  }
+  .detail-label {
+    font-size: 9px; font-family: var(--mono);
+    color: var(--muted); letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .detail-value {
+    font-size: 13px; font-weight: 600;
+    font-family: var(--mono);
+  }
+  .notif-text {
+    font-size: 13px; line-height: 1.6;
+    color: #8aa0b0;
+    padding: 12px 14px;
+    background: var(--surface2);
+    border-radius: 8px;
+    border-left: 3px solid var(--teal);
+  }
+
   .navbar { display:flex; gap:4px; margin-bottom:20px; background:var(--surface); border-radius:10px; padding:4px; width:fit-content; }
   .navbar-item {
     padding:7px 18px; border-radius:7px; font-size:13px; font-weight:500; cursor:pointer;
@@ -114,7 +252,6 @@
   .navbar-item:hover:not(.active) { color:var(--text); }
   .navbar-item.building { font-size:12px; padding:6px 14px; }
 
-  /* TABS */
   .tabs { display:flex; gap:4px; margin-bottom:20px; background:var(--surface); border-radius:10px; padding:4px; width:fit-content; }
   .tab {
     padding:7px 18px; border-radius:7px; font-size:13px; font-weight:500; cursor:pointer;
@@ -123,7 +260,6 @@
   .tab.active { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
   .tab:hover:not(.active) { color:var(--text); }
 
-  /* NUDGE BANNER */
   .nudge-banner {
     background:linear-gradient(135deg, #0d2a1e, #0b1e2e);
     border:1px solid var(--teal);
@@ -151,13 +287,11 @@
   }
   .nudge-tag.amber { background:var(--amber-dim); border-color:var(--amber); color:var(--amber); }
 
-  /* MAIN GRID */
   .main-grid { display:grid; grid-template-columns:1fr 360px; gap:16px; }
 
-  /* TAB PANEL CONTENT */
   .panel { display:none; }
   .panel.active { display:block; animation: fadeIn 0.3s ease; }
-  
+
   @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
   .floor-card {
     background:var(--surface); border:1px solid var(--border); border-radius:12px;
@@ -180,7 +314,6 @@
     position:relative; min-height:400px;
   }
 
-  /* ZONES */
   .zone {
     position:absolute; border-radius:6px; cursor:pointer;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -204,15 +337,12 @@
   .tt-label { color:var(--muted); }
   .tt-val { color:var(--text); font-family:var(--mono); }
 
-  /* LEGEND */
   .legend { display:flex; gap:12px; margin-top:14px; flex-wrap:wrap; }
   .leg-item { display:flex; align-items:center; gap:5px; font-size:11px; font-family:var(--mono); color:var(--muted); }
   .leg-swatch { width:12px; height:12px; border-radius:2px; }
 
-  /* RIGHT COLUMN */
   .right-col { display:flex; flex-direction:column; gap:16px; }
 
-  /* FORECAST CARD */
   .forecast-card {
     background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;
   }
@@ -232,7 +362,6 @@
   .day-fill { height:100%; border-radius:2px; transition:width 0.6s ease; }
   .day-tag { font-size:8px; padding:1px 5px; border-radius:3px; font-family:var(--mono); }
 
-  /* STATS GRID */
   .stats-card {
     background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;
   }
@@ -247,7 +376,6 @@
   .stat-val.blue { color:var(--blue); }
   .stat-label { font-size:10px; color:var(--muted); font-family:var(--mono); margin-top:3px; line-height:1.4; }
 
-  /* FM CARD */
   .fm-card {
     background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;
   }
@@ -265,11 +393,6 @@
   .fm-status.fixed { background:#1f1800; color:var(--amber); border:1px solid var(--amber); }
   .fm-saving { font-size:11px; color:var(--teal); font-family:var(--mono); }
 
-  /* VIEW PANELS */
-  .panel { display:none; }
-  .panel.active { display:block; }
-
-  /* BOTTOM BAR */
   .bottom-bar {
     margin-top:20px; padding-top:16px; border-top:1px solid var(--border);
     display:flex; align-items:center; justify-content:space-between;
@@ -278,7 +401,6 @@
   .bottom-bar span { display:flex; align-items:center; gap:6px; }
   .dot-green { width:6px; height:6px; border-radius:50%; background:var(--teal); display:inline-block; }
 
-  /* WEEK CHART */
   .week-chart { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; }
   .bar-chart { display:flex; align-items:flex-end; gap:8px; height:160px; margin-top:16px; }
   .bar-group { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
@@ -306,7 +428,6 @@
   .cl-item { display:flex; align-items:center; gap:5px; font-size:11px; font-family:var(--mono); color:var(--muted); }
   .cl-swatch { width:10px; height:10px; border-radius:2px; }
 
-  /* ZONE COMPARE */
   .compare-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; }
   .compare-bar { margin-top:12px; }
   .cb-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
@@ -317,9 +438,7 @@
   .cb-val { font-size:13px; font-family:var(--mono); width:44px; text-align:right; }
 
   @keyframes enterUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
   .anim { animation:enterUp 0.5s ease both; }
-  .panel.active { animation:fadeIn 0.3s ease; }
 </style>
 </head>
 <body>
@@ -334,22 +453,18 @@
       </div>
     </div>
     <div class="header-meta">
-      <div class="badge-container" id="badgeContainer">
-        <!-- Injected by JS -->
-      </div>
+      <div class="badge-container" id="badgeContainer"></div>
       <div class="live-pill"><div class="live-dot"></div>LIVE DEMO</div>
       <div class="clock" id="clock">—</div>
     </div>
   </header>
 
-  <!-- NAVBAR -->
   <div class="navbar" id="navbar">
     <button class="navbar-item active" onclick="switchBuilding('home', this)">🏠 Home</button>
     <button class="navbar-item building" onclick="switchBuilding('buildingA', this)">Building A</button>
     <button class="navbar-item building" onclick="switchBuilding('buildingB', this)">Building B</button>
   </div>
 
-  <!-- NUDGE BANNER -->
   <div class="nudge-banner" id="nudgeBanner">
     <div class="nudge-icon">☀️</div>
     <div class="nudge-body">
@@ -359,12 +474,8 @@
     </div>
   </div>
 
-  <!-- NOTIFICATIONS -->
-  <div id="notificationsContainer" style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
-    <!-- Injected by JS -->
-  </div>
+  <div id="notificationsContainer" style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;"></div>
 
-  <!-- TABS -->
   <div class="tabs">
     <button class="tab active" onclick="switchTab('floormap',this)">Floor Map</button>
     <button class="tab" onclick="switchTab('weekview',this)">Weekly Pattern</button>
@@ -372,7 +483,6 @@
     <button class="tab" onclick="switchTab('fm',this)">FM Dashboard</button>
   </div>
 
-  <!-- ═══ TAB: FLOOR MAP ═══ -->
   <div id="tab-floormap" class="panel active">
     <div class="main-grid">
       <div class="floor-card anim">
@@ -386,14 +496,11 @@
             <button class="layer-btn" onclick="setLayer('type',this)">Zone Type</button>
           </div>
         </div>
-        <div class="floor-map" id="floorMap">
-          <!-- zones injected by JS -->
-        </div>
+        <div class="floor-map" id="floorMap"></div>
         <div class="legend" id="mapLegend"></div>
       </div>
 
       <div class="right-col">
-        <!-- FORECAST -->
         <div class="forecast-card anim" style="animation-delay:0.1s">
           <div class="card-header">
             <div>
@@ -404,7 +511,6 @@
           <div class="day-row" id="dayRow"></div>
         </div>
 
-        <!-- STATS -->
         <div class="stats-card anim" style="animation-delay:0.2s">
           <div class="card-header">
             <div class="card-title">Key Findings</div>
@@ -432,7 +538,6 @@
     </div>
   </div>
 
-  <!-- ═══ TAB: WEEKLY PATTERN ═══ -->
   <div id="tab-weekview" class="panel">
     <div class="main-grid">
       <div class="week-chart anim">
@@ -476,7 +581,6 @@
     </div>
   </div>
 
-  <!-- ═══ TAB: ZONE INTELLIGENCE ═══ -->
   <div id="tab-zones" class="panel">
     <div class="main-grid">
       <div class="compare-card anim">
@@ -502,7 +606,6 @@
     </div>
   </div>
 
-  <!-- ═══ TAB: FM DASHBOARD ═══ -->
   <div id="tab-fm" class="panel">
     <div class="main-grid">
       <div class="fm-card anim">
@@ -615,19 +718,14 @@
 
 </div>
 
-<!-- TOOLTIP -->
 <div class="zone-tooltip" id="tooltip"></div>
 
-<!-- BADGE POPUPS -->
 <div class="badge-popup" id="sensorPopup"></div>
 <div class="badge-popup" id="anomalyPopup"></div>
 <div class="badge-popup" id="maintenancePopup"></div>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────────
-
-const TODAY_IDX = new Date().getDay(); // 0=Sun,1=Mon...5=Fri
-const DAYS = ['Mon','Tue','Wed','Thu','Fri'];
+const TODAY_IDX = new Date().getDay();
 const DAY_DATA = [
   { rooms:28, desks:26, label:'Mon' },
   { rooms:38, desks:33, label:'Tue', peak:true },
@@ -635,43 +733,85 @@ const DAY_DATA = [
   { rooms:24, desks:22, label:'Thu' },
   { rooms:18, desks:14, label:'Fri' },
 ];
-
-// Map JS getDay (1=Mon,2=Tue...5=Fri) to our array index
 const jsToIdx = {1:0,2:1,3:2,4:3,5:4};
 const todayIdx = jsToIdx[TODAY_IDX] !== undefined ? jsToIdx[TODAY_IDX] : 0;
 
 const ZONES = [
-  // Hot zones — named 84-zone desks
   { id:'coffee', name:'Coffee Lounge', type:'lounge', util:62, cap:20, sensor:96, x:4, y:4, w:22, h:14 },
   { id:'k11', name:'K11', type:'booth', util:58, cap:4, sensor:91, x:28, y:4, w:10, h:14 },
   { id:'k12', name:'K12', type:'booth', util:56, cap:4, sensor:90, x:40, y:4, w:10, h:14 },
   { id:'k13', name:'K13', type:'booth', util:54, cap:4, sensor:89, x:52, y:4, w:10, h:14 },
   { id:'k14', name:'K14', type:'booth', util:52, cap:4, sensor:88, x:64, y:4, w:10, h:14 },
-  // Named meeting rooms
   { id:'norppa', name:'Norppa', type:'meeting', util:44, cap:8, sensor:87, x:4, y:22, w:18, h:20 },
   { id:'karhu', name:'Karhu', type:'meeting', util:41, cap:10, sensor:86, x:24, y:22, w:20, h:20 },
   { id:'hirvi', name:'Hirvi', type:'meeting', util:38, cap:8, sensor:85, x:46, y:22, w:18, h:20 },
   { id:'mustikka', name:'Mustikka', type:'meeting', util:35, cap:6, sensor:84, x:66, y:22, w:18, h:20 },
-  // Open desks — 84-zone
   { id:'zone84a', name:'84-Zone A', type:'desk84', util:53, cap:30, sensor:91, x:4, y:46, w:38, h:18 },
   { id:'zone84b', name:'84-Zone B', type:'desk84', util:50, cap:28, sensor:88, x:44, y:46, w:40, h:18 },
-  // Generic numbered desks
   { id:'gen1', name:'Desk Area 1–40', type:'generic', util:25, cap:40, sensor:74, x:4, y:68, w:38, h:16 },
   { id:'gen2', name:'Desk Area 41–80', type:'generic', util:24, cap:40, sensor:72, x:44, y:68, w:40, h:16 },
-  // Räme — low activity
   { id:'rame', name:'Räme', type:'meeting', util:18, cap:6, sensor:83, x:78, y:4, w:18, h:18 },
   { id:'k8', name:'K8', type:'booth', util:22, cap:4, sensor:84, x:78, y:24, w:18, h:14 },
 ];
 
-// ── COLOUR HELPERS ────────────────────────────────────────────────────────────
+const NOTIFICATIONS_DATA = [
+  { 
+    type: 'sensor', icon: '🪫', title: 'Sensor Battery Critical', 
+    msg: '2.krs Neukkari battery at 2%', 
+    building: 'A', location: '2.krs · Neukkari',
+    critical: true,
+    details: 'Neukkari-kokoushuoneen sensorin akku on loppumassa. Akun varaus on 2%, joka tarkoittaa että sensori sammuu pian ilman toimenpiteitä. Suositus: vaihda paristo tai koko sensori lähipäivinä.',
+    priority: 4, ticket: 'TICKET-2401', time: '12 min'
+  },
+  { 
+    type: 'anomaly', icon: '📈', title: 'Usage Anomaly Detected', 
+    msg: 'Friday has 35% higher usage than forecast', 
+    building: 'A', location: 'Koko rakennus',
+    critical: false,
+    details: 'Perjantain käyttö poikkeaa historiallisesta mallista — 35% enemmän käyttäjiä kuin ennustettu. Mahdollisesti erikoistapahtumat tai poikkeava työpäivä. Tarkista kalenterivaraukset.',
+    priority: 2, ticket: 'TICKET-2402', time: '1 h'
+  },
+  { 
+    type: 'maintenance', icon: '🛠️', title: 'HVAC Maintenance Due', 
+    msg: 'Filter change recommended this week', 
+    building: 'A', location: 'HVAC-järjestelmä',
+    critical: false,
+    details: 'HVAC-järjestelmän suodatin tulee vaihtaa säännöllisen huollon mukaisesti. Seuraavan viikon aikana suositeltava — pidä huolta ilmanlaadusta.',
+    priority: 2, ticket: 'TICKET-2403', time: '3 h'
+  },
+  { 
+    type: 'sensor', icon: '🪫', title: 'Sensor Battery Low', 
+    msg: '4.krs Meeting Room battery at 8%', 
+    building: 'B', location: '4.krs · Meeting Room',
+    critical: true,
+    details: '4. kerroksen kokoushuoneen sensorin akku on matalalla tasolla (8%). Huolto-ohjelma on aktivoitu — vaihto ehdotus seuraavalla huoltokierroksella.',
+    priority: 3, ticket: 'TICKET-2404', time: '25 min'
+  },
+  { 
+    type: 'anomaly', icon: '🚨', title: 'Access Control Issue', 
+    msg: 'Door lock malfunction on floor 3', 
+    building: 'B', location: '3.krs · Pääovi',
+    critical: true,
+    details: 'Kerroksella 3 olevan oven lukitus on epävakaa. Turvallisuus-tarkastus suositeltava välittömästi — ovi saattaa jäädä auki tai lukkiutua väärin.',
+    priority: 5, ticket: 'TICKET-2405', time: '5 min'
+  },
+  { 
+    type: 'maintenance', icon: '🧹', title: 'Extra Cleaning Scheduled', 
+    msg: 'Conference rooms — added service', 
+    building: 'B', location: 'Konferenssisalit',
+    critical: false,
+    details: 'Konferenssisalien lisäpuhdistus on ohjelmoitu seuraavalle päivälle. Lisäpuhdistus tehdään klo 14:00 jälkeen, ei vaikuta normaaliin aikatauluun.',
+    priority: 1, ticket: 'TICKET-2406', time: '2 h'
+  },
+];
 
 function utilColor(u) {
-  if (u >= 60) return { bg:'#1a0d0d', border:'#ff4d4d', text:'#ff6666' }; // Full - red
-  if (u >= 50) return { bg:'#140d1a', border:'#ff7f00', text:'#ffa319' }; // Hot - orange
-  if (u >= 40) return { bg:'#0d1a14', border:'#ffcc00', text:'#ffdd33' }; // Warm - yellow
-  if (u >= 25) return { bg:'#0d1a2a', border:'#4a9eff', text:'#6ab8ff' }; // Moderate - blue
-  if (u >= 10) return { bg:'#0d2a1e', border:'#00c49a', text:'#00c49a' }; // Light - teal
-  return { bg:'#1a2210', border:'#7aa831', text:'#7aa831' }; // Empty - green
+  if (u >= 60) return { bg:'#1a0d0d', border:'#ff4d4d', text:'#ff6666' };
+  if (u >= 50) return { bg:'#140d1a', border:'#ff7f00', text:'#ffa319' };
+  if (u >= 40) return { bg:'#0d1a14', border:'#ffcc00', text:'#ffdd33' };
+  if (u >= 25) return { bg:'#0d1a2a', border:'#4a9eff', text:'#6ab8ff' };
+  if (u >= 10) return { bg:'#0d2a1e', border:'#00c49a', text:'#00c49a' };
+  return { bg:'#1a2210', border:'#7aa831', text:'#7aa831' };
 }
 
 function typeColor(t) {
@@ -685,13 +825,11 @@ function typeColor(t) {
   return map[t] || map.generic;
 }
 
-// ── STATE ─────────────────────────────────────────────────────────────────────
-
 let layer = 'util';
 let currentBuilding = 'home';
+let activeBadgePopup = null;
+let expandedNotificationId = null;
 const tooltip = document.getElementById('tooltip');
-
-// ── BUILDING SWITCHER ─────────────────────────────────────────────────────────
 
 function switchBuilding(building, btn) {
   currentBuilding = building;
@@ -699,28 +837,29 @@ function switchBuilding(building, btn) {
   btn.classList.add('active');
   
   if (building === 'home') {
-    document.getElementById('tab-floormap').style.display = 'contents';
     document.querySelectorAll('.tabs').forEach(t => t.style.display = 'flex');
     buildFloorMap();
   } else {
-    document.getElementById('tab-floormap').style.display = 'contents';
     document.querySelectorAll('.tabs').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-floormap').classList.add('active');
     const floorMap = document.getElementById('floorMap');
-    floorMap.innerHTML = `<div style="display:flex; align-items:center; justify-content:center; height:100%; font-size:18px; color:var(--muted); font-family:var(--mono);">
-      ${building === 'buildingA' ? '🏢 Building A — Floor Map' : '🏢 Building B — Floor Map'}
-    </div>`;
+    const name = building === 'buildingA' ? 'Building A' : 'Building B';
+    floorMap.innerHTML = `
+      <div style="display:flex; flex-direction:column; align-items:center; 
+                  justify-content:center; height:100%; gap:12px;
+                  font-family:var(--mono); color:var(--muted);">
+        <div style="font-size:48px;">🏢</div>
+        <div style="font-size:18px;">${name} — Floor Map</div>
+        <div style="font-size:12px;">Sensor data available · ${building === 'buildingA' ? '212' : '177'} sensors</div>
+      </div>`;
   }
   
   buildNotifications();
 }
 
-// ── NOTIFICATION BADGES ───────────────────────────────────────────────────────
-
-let activeBadgePopup = null;
-
 function toggleBadgePopup(type) {
-  const popupId = type + 'Popup';
-  const popup = document.getElementById(popupId);
+  const popup = document.getElementById(type + 'Popup');
   
   if (activeBadgePopup === type) {
     popup.classList.remove('show');
@@ -734,27 +873,48 @@ function toggleBadgePopup(type) {
 }
 
 function getFilteredNotifications() {
-  let notifications = NOTIFICATIONS_DATA;
-  if (currentBuilding === 'buildingA') {
-    notifications = NOTIFICATIONS_DATA.filter(n => n.building === 'A');
-  } else if (currentBuilding === 'buildingB') {
-    notifications = NOTIFICATIONS_DATA.filter(n => n.building === 'B');
-  }
-  return notifications;
+  if (currentBuilding === 'buildingA') return NOTIFICATIONS_DATA.filter(n => n.building === 'A');
+  if (currentBuilding === 'buildingB') return NOTIFICATIONS_DATA.filter(n => n.building === 'B');
+  return NOTIFICATIONS_DATA;
 }
 
 function buildBadgePopup(type) {
   const popup = document.getElementById(type + 'Popup');
   const notifications = getFilteredNotifications().filter(n => n.type === type);
   
-  const typeLabel = { sensor:'🔋 Sensor Alerts', anomaly:'📊 Anomalies', maintenance:'🔧 Maintenance' };
+  const typeMeta = {
+    sensor:      { icon: '🪫', label: 'Sensor Alerts' },
+    anomaly:     { icon: '📈', label: 'Anomalies' },
+    maintenance: { icon: '🛠️', label: 'Maintenance' }
+  };
+  const meta = typeMeta[type];
   
   popup.innerHTML = `
-    <div class="badge-popup-header">${typeLabel[type]} (${notifications.length})</div>
-    ${notifications.map((n, idx) => `
-      <div class="badge-popup-item">
-        <div style="font-weight:600; margin-bottom:2px;">${n.title}</div>
-        <div style="color:var(--muted); font-size:11px;">${n.msg}</div>
+    <div class="badge-popup-header">
+      <span>${meta.icon} ${meta.label}</span>
+      <span style="font-family:var(--mono); color:var(--muted); font-size:11px; font-weight:400;">${notifications.length} items</span>
+    </div>
+    ${notifications.length === 0 ? `
+      <div style="padding:24px; text-align:center; color:var(--muted); font-size:12px;">
+        No ${meta.label.toLowerCase()} ${currentBuilding !== 'home' ? 'in ' + (currentBuilding === 'buildingA' ? 'Building A' : 'Building B') : ''}
+      </div>
+    ` : notifications.map(n => `
+      <div class="popup-item">
+        <div class="popup-item-icon notif-icon ${n.type}">${n.icon}</div>
+        <div class="popup-item-content">
+          <div class="popup-item-title">
+            ${n.title}
+            ${n.critical ? '<span style="color:var(--red); font-size:11px;">●</span>' : ''}
+          </div>
+          <div class="popup-item-msg">${n.msg}</div>
+          <div class="popup-item-meta">
+            <span class="building-tag ${n.building}">Building ${n.building}</span>
+            <span>·</span>
+            <span>${n.location}</span>
+            <span>·</span>
+            <span>${n.time} ago</span>
+          </div>
+        </div>
       </div>
     `).join('')}
   `;
@@ -766,77 +926,39 @@ function buildBadges() {
   
   const notifications = getFilteredNotifications();
   const counts = {
-    sensor: notifications.filter(n => n.type === 'sensor').length,
-    anomaly: notifications.filter(n => n.type === 'anomaly').length,
-    maintenance: notifications.filter(n => n.type === 'maintenance').length,
+    sensor:      notifications.filter(n => n.type === 'sensor'),
+    anomaly:     notifications.filter(n => n.type === 'anomaly'),
+    maintenance: notifications.filter(n => n.type === 'maintenance')
   };
   
-  const icons = { sensor:'🔋', anomaly:'📊', maintenance:'🔧' };
+  const badgeMeta = {
+    sensor:      { icon: '🪫', label: 'Sensors' },
+    anomaly:     { icon: '📈', label: 'Anomalies' },
+    maintenance: { icon: '🛠️', label: 'Maintenance' }
+  };
   
-  Object.entries(counts).forEach(([type, count]) => {
-    if (count > 0) {
-      const badge = document.createElement('div');
-      badge.className = 'badge alert';
-      badge.onclick = () => toggleBadgePopup(type);
-      badge.innerHTML = `${icons[type]} ${count}`;
-      container.appendChild(badge);
-    }
+  Object.entries(counts).forEach(([type, items]) => {
+    if (items.length === 0) return;
+    
+    const hasCritical = items.some(n => n.critical);
+    const badge = document.createElement('div');
+    badge.className = 'badge' + (hasCritical ? ' alert' : '');
+    badge.title = `${badgeMeta[type].label}: ${items.length}`;
+    badge.onclick = () => toggleBadgePopup(type);
+    badge.innerHTML = `
+      <span style="font-size:18px;">${badgeMeta[type].icon}</span>
+      <span class="badge-count${hasCritical ? '' : ' warn'}">${items.length}</span>
+    `;
+    container.appendChild(badge);
   });
 }
-
-// ── NOTIFICATIONS ─────────────────────────────────────────────────────────────
-
-const NOTIFICATIONS_DATA = [
-  { 
-    type:'sensor', icon:'🔋', title:'Sensor Alert', msg:'2.krs Neukkari battery at 2%', 
-    building:'A', critical:true,
-    details: 'Neukkari on kerroksella 2 - sensori akku on loppumassa. Vaatii latauksen tai vaihdon lähipäivinä.',
-    priority: 4, ticket: 'TICKET-2401'
-  },
-  { 
-    type:'anomaly', icon:'📊', title:'Daily Anomaly', msg:'Friday has 35% higher usage than forecast', 
-    building:'A', critical:false,
-    details: 'Perjantain käyttö poikkeaa historiallisesta mallista. Mahdollisesti erikoistapahtumat tai poikkeava työpäivä.',
-    priority: 2, ticket: 'TICKET-2402'
-  },
-  { 
-    type:'maintenance', icon:'🔧', title:'Maintenance Due', msg:'HVAC filter change recommended this week', 
-    building:'A', critical:false,
-    details: 'HVAC-järjestelmän suodatin tulee vaihtaa säännöllisen huollon mukaisesti. Seuraavan viikon aikana suositeltava.',
-    priority: 2, ticket: 'TICKET-2403'
-  },
-  { 
-    type:'sensor', icon:'🔋', title:'Sensor Alert', msg:'4.krs Meeting Room battery at 8%', 
-    building:'B', critical:true,
-    details: 'Meeting room sensorin akku on matalalla tasolla (8%). Huolto-ohjelma on aktivoitu.',
-    priority: 3, ticket: 'TICKET-2404'
-  },
-  { 
-    type:'anomaly', icon:'📊', title:'Access Issue', msg:'Door lock malfunction on floor 3', 
-    building:'B', critical:true,
-    details: 'Kerroksella 3 olevan oven lukitus on epävakaa. Turvallisuus-tarkastus suositeltava välittömästi.',
-    priority: 5, ticket: 'TICKET-2405'
-  },
-  { 
-    type:'maintenance', icon:'🔧', title:'Cleaning Note', msg:'Extra cleaning scheduled for conference rooms', 
-    building:'B', critical:false,
-    details: 'Konferenssisalien lisäpuhdistus on ohjelmoitu seuraavalle päivälle. Normaali aika ei vaikuta.',
-    priority: 1, ticket: 'TICKET-2406'
-  },
-];
-
-let expandedNotificationId = null;
 
 function getNotificationId(n, idx) {
   return `notif-${n.building}-${n.type}-${idx}`;
 }
 
 function toggleNotificationDetails(id) {
-  if (expandedNotificationId === id) {
-    expandedNotificationId = null;
-  } else {
-    expandedNotificationId = id;
-  }
+  expandedNotificationId = (expandedNotificationId === id) ? null : id;
   buildNotifications();
 }
 
@@ -844,72 +966,100 @@ function buildNotifications() {
   const container = document.getElementById('notificationsContainer');
   container.innerHTML = '';
   
-  // Filter notifications based on current building
-  let notifications = NOTIFICATIONS_DATA;
-  if (currentBuilding === 'buildingA') {
-    notifications = NOTIFICATIONS_DATA.filter(n => n.building === 'A');
-  } else if (currentBuilding === 'buildingB') {
-    notifications = NOTIFICATIONS_DATA.filter(n => n.building === 'B');
+  const notifications = getFilteredNotifications();
+  
+  if (notifications.length === 0) {
+    container.innerHTML = `
+      <div style="padding:24px; text-align:center; color:var(--muted); 
+                  background:var(--surface); border:1px solid var(--border);
+                  border-radius:12px; font-size:13px;">
+        ✓ No notifications ${currentBuilding !== 'home' ? 'in ' + (currentBuilding === 'buildingA' ? 'Building A' : 'Building B') : '— all systems operational'}
+      </div>
+    `;
+    buildBadges();
+    return;
   }
-  // Home shows all
-
+  
   notifications.forEach((n, idx) => {
     const notifId = getNotificationId(n, idx);
     const isExpanded = expandedNotificationId === notifId;
     
-    const notif = document.createElement('div');
-    notif.style.cssText = `
-      background:var(--surface); border:1px solid ${n.critical ? 'var(--red)' : 'var(--border)'};
-      border-radius:12px; overflow:hidden;
-      transition: all 0.3s ease;
-    `;
+    const card = document.createElement('div');
+    card.className = 'notif-card' + (n.critical ? ' critical' : '');
     
-    const headerHTML = `
-      <div style="padding:16px 20px; display:flex; align-items:flex-start; gap:12px; cursor:pointer;" onclick="toggleNotificationDetails('${notifId}')">
-        <div style="font-size:20px; flex-shrink:0;">${n.icon}</div>
-        <div style="flex:1;">
-          <div style="font-size:12px; font-family:var(--mono); color:${n.critical ? 'var(--red)' : 'var(--muted)'}; margin-bottom:4px;">
-            ${n.type.toUpperCase()} ${currentBuilding === 'home' ? '· Building ' + n.building : ''}
+    const priorityColor = n.priority >= 4 ? 'var(--red)' 
+                        : n.priority >= 3 ? 'var(--amber)' 
+                        : 'var(--teal)';
+    const priorityLabel = n.priority >= 4 ? 'URGENT'
+                        : n.priority >= 3 ? 'HIGH'
+                        : n.priority >= 2 ? 'MEDIUM'
+                        : 'LOW';
+    
+    card.innerHTML = `
+      <div class="notif-header" onclick="toggleNotificationDetails('${notifId}')">
+        <div class="notif-icon ${n.type}">${n.icon}</div>
+        <div style="flex:1; min-width:0;">
+          <div class="notif-meta">
+            <span class="building-tag ${n.building}">Building ${n.building}</span>
+            <span class="notif-type">${n.type.toUpperCase()}</span>
+            <span class="notif-type">·</span>
+            <span class="notif-type">${n.location}</span>
+            <span class="notif-type">·</span>
+            <span class="notif-type">${n.time} ago</span>
           </div>
-          <div style="font-size:13px; font-weight:600; margin-bottom:2px;">${n.title}</div>
-          <div style="font-size:12px; color:var(--muted);">${n.msg}</div>
+          <div class="notif-title">${n.title}</div>
+          <div class="notif-msg">${n.msg}</div>
         </div>
-        <div style="font-size:16px; color:var(--muted); flex-shrink:0; transition: transform 0.3s;" class="expand-arrow">
-          ${isExpanded ? '▼' : '▶'}
-        </div>
+        <div class="notif-arrow" style="transform: rotate(${isExpanded ? 90 : 0}deg);">▶</div>
       </div>
-    `;
-    
-    const detailsHTML = isExpanded ? `
-      <div style="padding:0 20px 16px 52px; border-top:1px solid var(--border); display: flex; flex-direction: column; gap: 10px; animation: fadeIn 0.3s ease;">
-        <div style="font-size:12px; line-height:1.6; color:var(--text);">
-          ${n.details}
-        </div>
-        <div style="display:flex; gap:20px; font-size:12px; font-family:var(--mono);">
-          <div>
-            <div style="color:var(--muted); margin-bottom:2px;">PRIORITY</div>
-            <div style="color:${n.priority >= 4 ? 'var(--red)' : n.priority >= 3 ? 'var(--amber)' : 'var(--teal)'}; font-weight:600;">
-              ${n.priority}/5
+      
+      ${isExpanded ? `
+        <div class="notif-details">
+          <div class="notif-text">${n.details}</div>
+          
+          <div class="notif-details-grid">
+            <div class="detail-block">
+              <div class="detail-label">BUILDING</div>
+              <div class="detail-value" style="color: ${n.building === 'A' ? 'var(--teal)' : 'var(--blue)'};">
+                Building ${n.building}
+              </div>
+            </div>
+            <div class="detail-block">
+              <div class="detail-label">LOCATION</div>
+              <div class="detail-value" style="font-size:11px;">${n.location}</div>
+            </div>
+            <div class="detail-block">
+              <div class="detail-label">PRIORITY</div>
+              <div class="detail-value" style="color: ${priorityColor};">
+                ${priorityLabel} · ${n.priority}/5
+              </div>
+            </div>
+            <div class="detail-block">
+              <div class="detail-label">TICKET</div>
+              <div class="detail-value" style="color: var(--text); text-decoration:underline; text-decoration-style:dotted;">
+                ${n.ticket}
+              </div>
+            </div>
+            <div class="detail-block">
+              <div class="detail-label">TYPE</div>
+              <div class="detail-value" style="text-transform: capitalize;">${n.type}</div>
+            </div>
+            <div class="detail-block">
+              <div class="detail-label">STATUS</div>
+              <div class="detail-value" style="color: ${n.critical ? 'var(--red)' : 'var(--amber)'};">
+                ${n.critical ? '● Critical' : '○ Pending'}
+              </div>
             </div>
           </div>
-          <div>
-            <div style="color:var(--muted); margin-bottom:2px;">TICKET</div>
-            <div style="color:var(--text); font-weight:600; cursor:pointer; text-decoration:underline;" onclick="event.stopPropagation();">
-              ${n.ticket}
-            </div>
-          </div>
         </div>
-      </div>
-    ` : '';
+      ` : ''}
+    `;
     
-    notif.innerHTML = headerHTML + detailsHTML;
-    container.appendChild(notif);
+    container.appendChild(card);
   });
   
   buildBadges();
 }
-
-// ── FLOOR MAP ─────────────────────────────────────────────────────────────────
 
 function buildFloorMap() {
   const map = document.getElementById('floorMap');
@@ -976,8 +1126,6 @@ function setLayer(l, btn) {
   buildFloorMap();
 }
 
-// ── FORECAST ─────────────────────────────────────────────────────────────────
-
 function buildDayRow() {
   const row = document.getElementById('dayRow');
   row.innerHTML = '';
@@ -995,8 +1143,6 @@ function buildDayRow() {
     row.appendChild(el);
   });
 }
-
-// ── NUDGE BANNER ──────────────────────────────────────────────────────────────
 
 function buildNudge() {
   const td = DAY_DATA[todayIdx];
@@ -1023,14 +1169,12 @@ function buildNudge() {
   });
 }
 
-// ── WEEK CHART ────────────────────────────────────────────────────────────────
-
 function getUtilColor(val) {
-  if (val >= 40) return { bar:'#ff6666', text:'#ff6666', name:'Hot' };       // Full/Crowded
-  if (val >= 32) return { bar:'#ffa319', text:'#ffa319', name:'Warm' };      // Hot
-  if (val >= 24) return { bar:'#ffdd33', text:'#ffdd33', name:'Moderate' }; // Warm
-  if (val >= 16) return { bar:'#6ab8ff', text:'#6ab8ff', name:'Light' };     // Moderate
-  return { bar:'#00c49a', text:'#00c49a', name:'Quiet' };                     // Light
+  if (val >= 40) return { bar:'#ff6666', text:'#ff6666', name:'Hot' };
+  if (val >= 32) return { bar:'#ffa319', text:'#ffa319', name:'Warm' };
+  if (val >= 24) return { bar:'#ffdd33', text:'#ffdd33', name:'Moderate' };
+  if (val >= 16) return { bar:'#6ab8ff', text:'#6ab8ff', name:'Light' };
+  return { bar:'#00c49a', text:'#00c49a', name:'Quiet' };
 }
 
 function buildBarChart() {
@@ -1063,15 +1207,11 @@ function buildBarChart() {
   });
 }
 
-// ── TOP ZONES ─────────────────────────────────────────────────────────────────
-
 function buildTopZones() {
   const container = document.getElementById('topZonesContainer');
   if (!container) return;
   
-  const topZones = ZONES
-    .sort((a, b) => b.util - a.util)
-    .slice(0, 5);
+  const topZones = ZONES.sort((a, b) => b.util - a.util).slice(0, 5);
   
   container.innerHTML = topZones.map((z, idx) => {
     const color = utilColor(z.util);
@@ -1118,33 +1258,21 @@ function buildCompare() {
   `).join('');
 }
 
-// ── FM PANEL ──────────────────────────────────────────────────────────────────
-
 function buildFM() {
   const td = DAY_DATA[todayIdx];
   const dayName = ['Monday','Tuesday','Wednesday','Thursday','Friday'][todayIdx];
   const people = Math.round((td.rooms / 100) * 197 + (td.desks / 100) * 241);
 
-  const fmDay = document.getElementById('fmDay');
-  const fmPeople = document.getElementById('fmPeople');
-  const fmRooms = document.getElementById('fmRooms');
-  const fmDesks = document.getElementById('fmDesks');
-  if (fmDay) fmDay.textContent = dayName;
-  if (fmPeople) fmPeople.textContent = people;
-  if (fmRooms) fmRooms.textContent = td.rooms + '%';
-  if (fmDesks) fmDesks.textContent = td.desks + '%';
+  document.getElementById('fmDay').textContent = dayName;
+  document.getElementById('fmPeople').textContent = people;
+  document.getElementById('fmRooms').textContent = td.rooms + '%';
+  document.getElementById('fmDesks').textContent = td.desks + '%';
 
   const isHighDay = td.rooms >= 35;
-  const cleanSaving = document.getElementById('cleanSaving');
-  const caterSaving = document.getElementById('caterSaving');
-  const hvacSaving = document.getElementById('hvacSaving');
-
-  if (cleanSaving) cleanSaving.textContent = isHighDay ? 'Full run · all floors' : '↓ Reduced · floors 1+3 only';
-  if (caterSaving) caterSaving.textContent = isHighDay ? `${people} covers ordered` : `${Math.round(people*0.8)} covers · 20% reduction`;
-  if (hvacSaving) hvacSaving.textContent = isHighDay ? 'All zones active' : '3 zones offline · save ~15%';
+  document.getElementById('cleanSaving').textContent = isHighDay ? 'Full run · all floors' : '↓ Reduced · floors 1+3 only';
+  document.getElementById('caterSaving').textContent = isHighDay ? `${people} covers ordered` : `${Math.round(people*0.8)} covers · 20% reduction`;
+  document.getElementById('hvacSaving').textContent = isHighDay ? 'All zones active' : '3 zones offline · save ~15%';
 }
-
-// ── TABS ──────────────────────────────────────────────────────────────────────
 
 function switchTab(id, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -1152,16 +1280,10 @@ function switchTab(id, btn) {
   document.getElementById('tab-' + id).classList.add('active');
   btn.classList.add('active');
 
-  // Rebuild on first visit
-  if (id === 'weekview') {
-    buildBarChart();
-    buildTopZones();
-  }
+  if (id === 'weekview') { buildBarChart(); buildTopZones(); }
   if (id === 'zones') buildCompare();
   if (id === 'fm') buildFM();
 }
-
-// ── CLOCK ─────────────────────────────────────────────────────────────────────
 
 function updateClock() {
   const now = new Date();
@@ -1169,8 +1291,6 @@ function updateClock() {
     now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}) + ' · ' +
     now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
 }
-
-// ── INIT ──────────────────────────────────────────────────────────────────────
 
 buildFloorMap();
 buildDayRow();
@@ -1181,7 +1301,6 @@ buildTopZones();
 updateClock();
 setInterval(updateClock, 30000);
 
-// Close popups on click outside
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.badge') && !e.target.closest('.badge-popup')) {
     document.querySelectorAll('.badge-popup').forEach(p => p.classList.remove('show'));
