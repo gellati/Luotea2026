@@ -3,757 +3,923 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WorkPulse — Valmet Lentokentänkatu</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>WorkPulse v2 — Valmet Lentokentänkatu</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0b0f14;
-    --surface: #131920;
-    --surface2: #1a2330;
-    --border: #1f2d3d;
-    --teal: #00c49a;
-    --teal-dim: #00c49a22;
-    --amber: #f5a623;
-    --amber-dim: #f5a62322;
-    --red: #e05c5c;
-    --red-dim: #e05c5c22;
-    --blue: #4a9eff;
-    --blue-dim: #4a9eff22;
-    --text: #e8edf2;
-    --muted: #5a7080;
-    --mono: 'DM Mono', monospace;
-    --head: 'Syne', sans-serif;
-    --body: 'DM Sans', sans-serif;
-  }
+:root {
+  --bg: #0b0f14;
+  --white: #0b0f14;
+  --surface: #131920;
+  --surface2: #1a2330;
+  --border: #1f2d3d;
+  --border2: #253548;
+  --ink: #e0eaf4;
+  --ink2: #a8bece;
+  --muted: #5a7485;
+  --blue: #4a9eff;
+  --blue-dim: #4a9eff18;
+  --blue-mid: #4a9eff30;
+  --amber: #f5a623;
+  --amber-dim: #f5a62318;
+  --green: #00c49a;
+  --green-dim: #00c49a18;
+  --red: #e05c5c;
+  --red-dim: #e05c5c18;
+  --coral: #e8703a;
+  --mono: 'IBM Plex Mono', monospace;
+  --display: 'Fraunces', serif;
+  --body: 'Plus Jakarta Sans', sans-serif;
+}
 
-  * { margin:0; padding:0; box-sizing:border-box; }
+* { margin:0; padding:0; box-sizing:border-box; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--body);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  min-height: 100vh;
+}
 
-  body::before {
-    content:'';
-    position:fixed; inset:0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 40px 40px;
-    opacity:0.3;
-    pointer-events:none;
-    z-index:0;
-  }
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    radial-gradient(circle at 20% 50%, #4a9eff0a 0%, transparent 60%),
+    radial-gradient(circle at 80% 20%, #f5a6230a 0%, transparent 50%);
+  pointer-events:none; z-index:0;
+}
 
-  .wrap { position:relative; z-index:1; max-width:1280px; margin:0 auto; padding:24px; }
+.wrap { position:relative; z-index:1; max-width:1300px; margin:0 auto; padding:20px 24px; }
 
-  header {
-    display:flex; align-items:center; justify-content:space-between;
-    padding-bottom:20px; border-bottom:1px solid var(--border);
-    margin-bottom:24px;
-  }
-  .logo { display:flex; align-items:center; gap:12px; }
-  .logo-mark {
-    width:36px; height:36px; border-radius:8px;
-    background:linear-gradient(135deg, var(--teal), #0099ff);
-    display:flex; align-items:center; justify-content:center;
-    font-family:var(--head); font-weight:800; font-size:16px; color:#000;
-  }
-  .logo-text { font-family:var(--head); font-size:18px; font-weight:700; }
-  .logo-sub { font-size:11px; color:var(--muted); font-family:var(--mono); margin-top:1px; }
+/* ── HEADER ── */
+header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding-bottom:16px; border-bottom:2px solid var(--ink);
+  margin-bottom:20px;
+}
+.logo { display:flex; align-items:center; gap:14px; }
+.logo-mark {
+  width:40px; height:40px; background:var(--blue); border-radius:4px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--display); font-weight:700; font-size:18px; color:#ffffff; letter-spacing:-1px;
+}
+.logo-name { font-family:var(--display); font-size:20px; font-weight:600; letter-spacing:-0.5px; }
+.logo-sub { font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:2px; letter-spacing:0.08em; }
+.header-right { display:flex; align-items:center; gap:16px; }
+.badge-live {
+  font-family:var(--mono); font-size:10px; letter-spacing:0.1em;
+  padding:4px 12px; border:1.5px solid var(--green); color:var(--green);
+  border-radius:2px; display:flex; align-items:center; gap:6px;
+}
+.live-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.clock { font-family:var(--mono); font-size:12px; color:var(--muted); }
+.dataset-count { font-family:var(--mono); font-size:10px; color:var(--blue); border:1px solid var(--blue-mid); padding:3px 8px; border-radius:2px; }
 
-  .header-meta { display:flex; align-items:center; gap:20px; }
-  .live-pill {
-    display:flex; align-items:center; gap:6px;
-    background:var(--teal-dim); border:1px solid var(--teal);
-    border-radius:20px; padding:4px 12px;
-    font-size:11px; font-family:var(--mono); color:var(--teal); letter-spacing:0.05em;
-  }
-  .live-dot {
-    width:7px; height:7px; border-radius:50%; background:var(--teal);
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+/* ── NUDGE ── */
+.nudge {
+  background:#0d1f35; color:var(--ink); border:1px solid var(--blue-mid);
+  border-radius:4px; padding:14px 20px;
+  display:flex; align-items:flex-start; gap:16px;
+  margin-bottom:20px;
+  animation: slideIn 0.5s ease both;
+}
+@keyframes slideIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+.nudge-label { font-family:var(--mono); font-size:9px; color:var(--muted); letter-spacing:0.12em; margin-bottom:5px; }
+.nudge-msg { font-size:13.5px; line-height:1.55; color:var(--ink); }
+.nudge-msg strong { color:var(--green); }
+.nudge-msg em { color:var(--amber); font-style:normal; font-family:var(--mono); font-size:12px; }
+.nudge-pills { display:flex; flex-wrap:wrap; gap:5px; margin-top:10px; }
+.npill {
+  font-family:var(--mono); font-size:10px; padding:2px 8px;
+  border-radius:2px; border:1px solid;
+}
+.npill.g { color:#7dd3c0; border-color:#7dd3c080; background:#7dd3c010; }
+.npill.a { color:#f0bf6a; border-color:#f0bf6a80; background:#f0bf6a10; }
+.npill.r { color:#f08080; border-color:#f0808080; background:#f0808010; }
 
-  .clock { font-family:var(--mono); font-size:13px; color:var(--muted); }
+/* ── TABS ── */
+.tabs {
+  display:flex; gap:0; margin-bottom:20px;
+  border-bottom:1px solid var(--border);
+  align-items:flex-end; justify-content:space-between;
+}
+.tabs-left { display:flex; gap:0; align-items:flex-end; }
+.tab {
+  padding:10px 18px; font-size:12px; font-weight:600; font-family:var(--mono);
+  letter-spacing:0.04em; cursor:pointer; border:none; background:transparent;
+  color:var(--muted); border-bottom:2px solid transparent; margin-bottom:-2px;
+  transition:all 0.2s; text-transform:uppercase;
+}
+.tab:hover:not(.active) { color:var(--ink2); }
+.tab.active { color:var(--blue); border-bottom-color:var(--blue); }
+.tab .new-badge {
+  font-size:8px; background:var(--coral); color:white; padding:1px 4px;
+  border-radius:2px; margin-left:5px; vertical-align:middle;
+}
 
-  .badge-container { display:flex; align-items:center; gap:8px; }
-  .badge {
-    position:relative; width:44px; height:44px; border-radius:12px;
-    background:var(--surface2); border:1px solid var(--border);
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer; transition:all 0.3s;
-    color: var(--muted);
-  }
-  .badge:hover { background:var(--surface); border-color:var(--text); transform:translateY(-2px); color: var(--text); }
-  .badge.alert { color: var(--red); border-color: var(--red); }
-  .badge-count {
-    position: absolute;
-    top: -4px; right: -4px;
-    min-width: 18px; height: 18px;
-    border-radius: 9px;
-    background: var(--red);
-    color: #fff;
-    font-size: 10px; font-weight: 700;
-    font-family: var(--mono);
-    display: flex; align-items: center; justify-content: center;
-    padding: 0 5px;
-    border: 2px solid var(--bg);
-  }
-  .badge-count.warn { background: var(--amber); color: #000; }
-  .badge-popup {
-    position:fixed; top:70px; right:20px; width:360px;
-    background:var(--surface); border:1px solid var(--border);
-    border-radius:12px; z-index:1000; opacity:0; pointer-events:none;
-    transform:translateY(-10px); transition:all 0.3s;
-    box-shadow:0 8px 32px rgba(0,0,0,0.5); max-height:480px; overflow-y:auto;
-  }
-  .badge-popup.show { opacity:1; pointer-events:auto; transform:translateY(0); }
-  .badge-popup-header {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    font-weight: 600; font-size: 13px;
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0;
-    background: var(--surface);
-    z-index: 1;
-  }
-  .popup-item {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    transition: background 0.2s;
-    display: flex; gap: 12px; align-items: flex-start;
-  }
-  .popup-item:hover { background: var(--surface2); }
-  .popup-item:last-child { border-bottom: none; }
-  .popup-item-icon {
-    width: 32px; height: 32px;
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-  .popup-item-content { flex: 1; min-width: 0; }
-  .popup-item-title {
-    font-size: 12px; font-weight: 600;
-    margin-bottom: 2px;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .popup-item-msg {
-    font-size: 11px; color: var(--muted);
-    margin-bottom: 4px;
-    line-height: 1.4;
-  }
-  .popup-item-meta {
-    display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
-    font-size: 10px; font-family: var(--mono);
-    color: var(--muted);
-  }
+/* ── GRID ── */
+.grid-2 { display:grid; grid-template-columns:1fr 340px; gap:16px; }
+.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+.grid-2-1 { display:grid; grid-template-columns:2fr 1fr; gap:16px; }
+.col { display:flex; flex-direction:column; gap:16px; }
 
-  .building-tag {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 10px; font-family: var(--mono);
-    padding: 3px 8px; border-radius: 4px;
-    font-weight: 600; letter-spacing: 0.05em;
-  }
-  .building-tag.A { background: var(--teal-dim); border: 1px solid var(--teal); color: var(--teal); }
-  .building-tag.B { background: var(--blue-dim); border: 1px solid var(--blue); color: var(--blue); }
+/* ── CARDS ── */
+.card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:4px; padding:20px;
+  animation:enterUp 0.4s ease both;
+}
+.card.delay1 { animation-delay:0.05s; }
+.card.delay2 { animation-delay:0.1s; }
+.card.delay3 { animation-delay:0.15s; }
+@keyframes enterUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 
-  .notif-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-  .notif-card.critical {
-    border-color: var(--red);
-    box-shadow: 0 0 0 1px var(--red-dim);
-  }
-  .notif-header {
-    padding: 16px 20px;
-    display: flex; align-items: flex-start; gap: 14px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .notif-header:hover { background: var(--surface2); }
-  .notif-icon {
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .notif-icon.sensor { background: var(--red-dim); color: var(--red); }
-  .notif-icon.anomaly { background: var(--amber-dim); color: var(--amber); }
-  .notif-icon.maintenance { background: var(--blue-dim); color: var(--blue); }
-  .notif-meta {
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-    margin-bottom: 6px;
-  }
-  .notif-type {
-    font-size: 10px; font-family: var(--mono);
-    color: var(--muted); letter-spacing: 0.05em;
-  }
-  .notif-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
-  .notif-msg { font-size: 12px; color: var(--muted); line-height: 1.5; }
-  .notif-arrow {
-    font-size: 14px; color: var(--muted);
-    flex-shrink: 0;
-    transition: transform 0.3s;
-    align-self: center;
-  }
+.card-title {
+  font-family:var(--display); font-size:15px; font-weight:600; letter-spacing:-0.3px;
+  margin-bottom:2px;
+}
+.card-sub { font-family:var(--mono); font-size:9px; color:var(--muted); letter-spacing:0.1em; margin-bottom:14px; }
+.card-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px; }
+.card-header .card-title { margin-bottom:2px; }
+.card-header .card-sub { margin-bottom:0; }
 
-  .notif-details {
-    padding: 16px 20px 18px 70px;
-    border-top: 1px solid var(--border);
-    display: flex; flex-direction: column; gap: 14px;
-    animation: fadeIn 0.3s ease;
-  }
-  .notif-details-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-  }
-  .detail-block {
-    background: var(--surface2);
-    border-radius: 8px;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-  }
-  .detail-label {
-    font-size: 9px; font-family: var(--mono);
-    color: var(--muted); letter-spacing: 0.1em;
-    margin-bottom: 4px;
-  }
-  .detail-value {
-    font-size: 13px; font-weight: 600;
-    font-family: var(--mono);
-  }
-  .notif-text {
-    font-size: 13px; line-height: 1.6;
-    color: #8aa0b0;
-    padding: 12px 14px;
-    background: var(--surface2);
-    border-radius: 8px;
-    border-left: 3px solid var(--teal);
-  }
+/* ── LAYER BUTTONS ── */
+.layer-btns { display:flex; gap:3px; }
+.lbtn {
+  font-family:var(--mono); font-size:9px; letter-spacing:0.05em;
+  padding:4px 9px; border-radius:2px; cursor:pointer;
+  border:1px solid var(--border); background:transparent; color:var(--muted);
+  transition:all 0.15s; text-transform:uppercase;
+}
+.lbtn.on { background:var(--blue); color:#ffffff; border-color:var(--blue); }
 
-  .navbar { display:flex; gap:4px; margin-bottom:20px; background:var(--surface); border-radius:10px; padding:4px; width:fit-content; }
-  .navbar-item {
-    padding:7px 18px; border-radius:7px; font-size:13px; font-weight:500; cursor:pointer;
-    transition:all 0.2s; border:none; background:transparent; color:var(--muted); font-family:var(--body);
-  }
-  .navbar-item.active { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
-  .navbar-item:hover:not(.active) { color:var(--text); }
-  .navbar-item.building { font-size:12px; padding:6px 14px; }
+/* ── FLOOR MAP ── */
+.floor-map {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:3px; position:relative; min-height:460px; overflow:hidden;
+}
+.floor-outline {
+  position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:2;
+}
+.floor-grid-lines {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 30px 30px; opacity:0.5;
+}
+.fzone {
+  position:absolute; border-radius:2px; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition:all 0.25s; border:1.5px solid; overflow:hidden;
+  font-family:var(--mono); font-size:9.5px; text-align:center;
+}
+.fzone:hover { z-index:10; filter:brightness(1.05); outline:2px solid var(--ink); }
+.fzone .zval { font-size:15px; font-weight:600; line-height:1; margin-bottom:2px; font-family:var(--display); }
+.fzone .zname { font-size:8.5px; opacity:0.75; line-height:1.2; }
+.fzone .zclean { font-size:8px; margin-top:3px; }
 
-  .tabs { display:flex; gap:4px; margin-bottom:20px; background:var(--surface); border-radius:10px; padding:4px; width:fit-content; }
-  .tab {
-    padding:7px 18px; border-radius:7px; font-size:13px; font-weight:500; cursor:pointer;
-    transition:all 0.2s; border:none; background:transparent; color:var(--muted); font-family:var(--body);
-  }
-  .tab.active { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
-  .tab:hover:not(.active) { color:var(--text); }
+/* ── TOOLTIP ── */
+.tt {
+  position:fixed; background:#0d1f35; color:var(--ink); border:1px solid var(--border);
+  border-radius:3px; padding:10px 14px; font-size:11px;
+  pointer-events:none; z-index:200; opacity:0; transition:opacity 0.12s;
+  min-width:170px; box-shadow:0 8px 30px rgba(0,0,0,0.2);
+}
+.tt.show { opacity:1; }
+.tt-title { font-family:var(--display); font-size:13px; font-weight:600; margin-bottom:6px; color:var(--blue); }
+.tt-row { display:flex; justify-content:space-between; gap:16px; margin-top:4px; font-size:10.5px; }
+.tt-lbl { color:var(--muted); font-family:var(--mono); }
+.tt-val { color:var(--ink); font-family:var(--mono); }
+.tt-cleaning { margin-top:6px; padding-top:6px; border-top:1px solid var(--border); font-size:10px; font-family:var(--mono); color:#f0bf6a; }
 
-  .nudge-banner {
-    background:linear-gradient(135deg, #0d2a1e, #0b1e2e);
-    border:1px solid var(--teal);
-    border-radius:12px; padding:16px 20px;
-    display:flex; align-items:flex-start; gap:16px;
-    margin-bottom:20px;
-    position:relative; overflow:hidden;
-    animation: fadeSlide 0.6s ease both;
-  }
-  .nudge-banner::before {
-    content:'';
-    position:absolute; top:0; left:0; right:0; height:1px;
-    background:linear-gradient(90deg, transparent, var(--teal), transparent);
-  }
-  @keyframes fadeSlide { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
-  .nudge-icon { font-size:28px; flex-shrink:0; margin-top:2px; }
-  .nudge-body {}
-  .nudge-label { font-size:10px; font-family:var(--mono); color:var(--teal); letter-spacing:0.1em; margin-bottom:4px; }
-  .nudge-text { font-size:14px; line-height:1.5; }
-  .nudge-text strong { color:var(--teal); }
-  .nudge-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
-  .nudge-tag {
-    font-size:11px; font-family:var(--mono); padding:3px 10px; border-radius:4px;
-    background:var(--teal-dim); border:1px solid var(--teal); color:var(--teal);
-  }
-  .nudge-tag.amber { background:var(--amber-dim); border-color:var(--amber); color:var(--amber); }
+/* ── LEGEND ── */
+.legend { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+.leg { display:flex; align-items:center; gap:5px; font-size:10px; font-family:var(--mono); color:var(--muted); }
+.leg-sq { width:11px; height:11px; border-radius:1px; border:1.5px solid; }
 
-  .main-grid { display:grid; grid-template-columns:1fr 360px; gap:16px; }
+/* ── STAT BOXES ── */
+.stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.sbox {
+  background:var(--surface2); border:1px solid var(--border); border-radius:3px;
+  padding:12px 14px;
+}
+.sbox-val {
+  font-family:var(--display); font-size:26px; font-weight:700; line-height:1;
+  letter-spacing:-1px;
+}
+.sbox-label { font-size:10px; color:var(--muted); font-family:var(--mono); margin-top:4px; line-height:1.4; }
+.sbox-val.blue { color:var(--blue); }
+.sbox-val.amber { color:var(--amber); }
+.sbox-val.green { color:var(--green); }
+.sbox-val.red { color:var(--red); }
 
-  .panel { display:none; }
-  .panel.active { display:block; animation: fadeIn 0.3s ease; }
+/* ── FORECAST ROW ── */
+.day-strip { display:grid; grid-template-columns:repeat(5,1fr); gap:4px; }
+.day-cell {
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:10px 4px; border-radius:3px; background:var(--surface2);
+  border:1.5px solid var(--border); cursor:pointer; transition:all 0.2s;
+}
+.day-cell.today { border-color:var(--blue); background:var(--blue-dim); }
+.day-cell.peak { border-color:var(--amber); background:var(--amber-dim); }
+.day-cell.holiday { border-color:var(--muted); background:var(--surface2); opacity:0.6; }
+.day-lbl { font-family:var(--mono); font-size:9px; color:var(--muted); letter-spacing:0.05em; }
+.day-pct { font-family:var(--display); font-size:17px; font-weight:600; }
+.day-bar { width:30px; height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+.day-fill { height:100%; border-radius:2px; }
+.day-tag {
+  font-size:8px; font-family:var(--mono); padding:1px 5px;
+  border-radius:1px; border:1px solid;
+}
+.day-tag.peak { color:var(--amber); border-color:var(--amber); background:var(--amber-dim); }
+.day-tag.today { color:var(--blue); border-color:var(--blue); background:var(--blue-dim); }
+.day-tag.hol { color:var(--muted); border-color:var(--border2); }
 
-  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-  .floor-card {
-    background:var(--surface); border:1px solid var(--border); border-radius:12px;
-    padding:20px;
-  }
-  .card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
-  .card-title { font-family:var(--head); font-size:14px; font-weight:700; }
-  .card-sub { font-size:11px; color:var(--muted); font-family:var(--mono); margin-top:2px; }
+/* ── BAR CHART ── */
+.barchart { display:flex; align-items:flex-end; gap:10px; height:150px; }
+.bgrp { flex:1; display:flex; flex-direction:column-reverse; align-items:center; gap:3px; }
+.bwrap { width:100%; display:flex; gap:2px; align-items:flex-end; flex:1; }
+.bar {
+  flex:1; border-radius:2px 2px 0 0; min-height:3px; transition:height 0.7s cubic-bezier(0.16,1,0.3,1);
+  cursor:pointer; position:relative;
+}
+.bar:hover::after {
+  content:attr(data-t);
+  position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%);
+  background:var(--ink); color:var(--bg); border-radius:2px;
+  padding:3px 7px; font-size:9px; white-space:nowrap; font-family:var(--mono); z-index:20;
+}
+.bar.rooms { background:var(--blue); }
+.bar.desks { background:#93c5fd; }
+.bar.sla { background:var(--red); }
+.blbl { font-family:var(--mono); font-size:9.5px; color:var(--muted); }
+.blbl.peak { color:var(--amber); font-weight:500; }
+.bpeak-tag { font-size:7.5px; font-family:var(--mono); color:var(--amber); background:var(--amber-dim); border:1px solid var(--amber); padding:1px 4px; border-radius:1px; }
+.chart-legend { display:flex; gap:14px; margin-top:10px; }
+.cl { display:flex; align-items:center; gap:5px; font-size:10px; font-family:var(--mono); color:var(--muted); }
+.cls { width:10px; height:10px; border-radius:1px; }
 
-  .layer-btns { display:flex; gap:4px; }
-  .layer-btn {
-    padding:4px 10px; border-radius:5px; font-size:11px; font-family:var(--mono);
-    cursor:pointer; border:1px solid var(--border); background:transparent; color:var(--muted);
-    transition:all 0.2s;
-  }
-  .layer-btn.on { background:var(--surface2); color:var(--text); border-color:var(--teal); }
+/* ── HOLIDAY MARKER ── */
+.hol-line { position:absolute; top:0; bottom:0; width:1.5px; background:var(--amber); opacity:0.4; pointer-events:none; }
+.hol-tag {
+  position:absolute; top:2px; font-size:8px; font-family:var(--mono);
+  color:var(--amber); white-space:nowrap; transform:rotate(-90deg);
+  transform-origin:left top; left:3px;
+}
 
-  .floor-map {
-    background:var(--surface2); border-radius:8px; padding:20px;
-    position:relative; min-height:400px;
-  }
+/* ── COMPARE BARS ── */
+.cbar-row { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+.cbar-lbl { font-family:var(--mono); font-size:10px; color:var(--ink2); width:140px; flex-shrink:0; }
+.cbar-track { flex:1; height:22px; background:var(--surface2); border-radius:2px; overflow:hidden; border:1px solid var(--border); }
+.cbar-fill { height:100%; display:flex; align-items:center; padding:0 8px; transition:width 1s cubic-bezier(0.16,1,0.3,1); border-radius:2px; }
+.cbar-fill span { font-size:10px; font-family:var(--mono); color:white; font-weight:500; }
+.cbar-val { font-family:var(--mono); font-size:11px; width:40px; text-align:right; }
 
-  .zone {
-    position:absolute; border-radius:6px; cursor:pointer;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    transition:all 0.3s; border:1px solid transparent;
-    font-family:var(--mono); font-size:10px; text-align:center;
-    overflow:hidden;
-  }
-  .zone:hover { transform:scale(1.03); z-index:10; border-color:white !important; }
-  .zone-name { font-size:9px; opacity:0.8; line-height:1.2; }
-  .zone-pct { font-size:13px; font-weight:500; line-height:1; margin-bottom:2px; }
+/* ── FM TABLE ── */
+.fm-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:11px 0; border-bottom:1px solid var(--border);
+}
+.fm-row:last-child { border-bottom:none; }
+.fm-svc { display:flex; align-items:center; gap:10px; }
+.fm-ico { width:32px; height:32px; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:15px; background:var(--surface2); border:1px solid var(--border); }
+.fm-name { font-size:13px; font-weight:500; }
+.fm-note { font-size:10px; color:var(--muted); font-family:var(--mono); margin-top:1px; }
+.fm-badge {
+  font-size:10px; font-family:var(--mono); padding:3px 9px; border-radius:2px; border:1px solid;
+}
+.fm-badge.opt { color:var(--green); border-color:var(--green); background:var(--green-dim); }
+.fm-badge.fix { color:var(--amber); border-color:var(--amber); background:var(--amber-dim); }
+.fm-badge.alert { color:var(--red); border-color:var(--red); background:var(--red-dim); }
+.fm-saving { font-family:var(--mono); font-size:10px; color:var(--green); margin-top:2px; }
+.fm-right { text-align:right; }
 
-  .zone-tooltip {
-    position:fixed; background:#1a2d40; border:1px solid var(--teal);
-    border-radius:8px; padding:10px 14px; font-size:12px; pointer-events:none;
-    z-index:100; opacity:0; transition:opacity 0.15s; min-width:160px;
-    box-shadow:0 8px 32px rgba(0,0,0,0.5);
-  }
-  .zone-tooltip.show { opacity:1; }
-  .tt-name { font-family:var(--head); font-weight:700; font-size:13px; margin-bottom:6px; }
-  .tt-row { display:flex; justify-content:space-between; gap:20px; margin-top:3px; font-size:11px; }
-  .tt-label { color:var(--muted); }
-  .tt-val { color:var(--text); font-family:var(--mono); }
+/* ── CROSS BUILDING ── */
+.bldg-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:4px; }
+.bldg-card {
+  background:var(--surface2); border:1px solid var(--border); border-radius:3px; padding:14px;
+  position:relative; overflow:hidden;
+}
+.bldg-card.active-bldg { border-color:var(--blue); background:var(--blue-dim); }
+.bldg-name { font-family:var(--display); font-size:14px; font-weight:600; margin-bottom:2px; }
+.bldg-loc { font-family:var(--mono); font-size:9px; color:var(--muted); margin-bottom:10px; }
+.bldg-peak { font-family:var(--mono); font-size:10px; }
+.bldg-peak span { font-family:var(--display); font-size:20px; font-weight:600; }
+.bldg-bars { margin-top:10px; }
+.mini-bar-row { display:flex; align-items:center; gap:6px; margin-bottom:4px; font-family:var(--mono); font-size:8.5px; color:var(--muted); }
+.mini-track { flex:1; height:8px; background:var(--border); border-radius:1px; overflow:hidden; }
+.mini-fill { height:100%; border-radius:1px; background:var(--blue); }
+.bldg-verified { position:absolute; top:8px; right:8px; font-size:8px; font-family:var(--mono); color:var(--green); }
 
-  .legend { display:flex; gap:12px; margin-top:14px; flex-wrap:wrap; }
-  .leg-item { display:flex; align-items:center; gap:5px; font-size:11px; font-family:var(--mono); color:var(--muted); }
-  .leg-swatch { width:12px; height:12px; border-radius:2px; }
+/* ── COST IMPACT ── */
+.cost-hero {
+  text-align:center; padding:24px; background:#050c14; border-radius:4px; color:var(--ink); border:1px solid var(--border);
+  margin-bottom:16px; position:relative; overflow:hidden;
+}
+.cost-hero::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 30% 50%, #4a9eff20 0%, transparent 60%),
+             radial-gradient(ellipse at 70% 50%, #f5a62318 0%, transparent 60%);
+}
+.cost-hero-label { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:0.12em; margin-bottom:6px; position:relative; }
+.cost-hero-val { font-family:var(--display); font-size:56px; font-weight:700; color:var(--green); letter-spacing:-2px; line-height:1; position:relative; }
+.cost-hero-sub { font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:6px; position:relative; }
+.cost-breakdown { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+.cost-item {
+  background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:14px;
+}
+.cost-item-val { font-family:var(--display); font-size:24px; font-weight:700; color:var(--green); }
+.cost-item-lbl { font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:4px; line-height:1.5; }
+.cost-item-how { font-size:11px; color:var(--ink2); margin-top:8px; line-height:1.5; }
+.cost-bar { height:4px; background:var(--border); border-radius:2px; margin-top:10px; overflow:hidden; }
+.cost-bar-fill { height:100%; border-radius:2px; background:var(--green); transition:width 1.2s ease; }
 
-  .right-col { display:flex; flex-direction:column; gap:16px; }
+/* ── SLA CHART ── */
+.sla-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
+.sla-day {
+  padding:10px 6px; border-radius:3px; text-align:center;
+  border:1px solid var(--border); background:var(--surface2);
+}
+.sla-day.peak { border-color:var(--red); background:var(--red-dim); }
+.sla-lbl { font-family:var(--mono); font-size:9px; color:var(--muted); }
+.sla-pct { font-family:var(--display); font-size:22px; font-weight:700; }
+.sla-pct.high { color:var(--red); }
+.sla-pct.mid { color:var(--amber); }
+.sla-pct.low { color:var(--green); }
+.sla-note { font-family:var(--mono); font-size:8px; color:var(--muted); margin-top:3px; }
 
-  .forecast-card {
-    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;
-  }
-  .day-row { display:grid; grid-template-columns:repeat(5,1fr); gap:4px; margin-top:12px; }
-  .day-cell {
-    display:flex; flex-direction:column; align-items:center; gap:4px;
-    padding:10px 4px; border-radius:8px; background:var(--surface2);
-    border:1px solid transparent; cursor:pointer; transition:all 0.2s;
-    font-family:var(--mono);
-  }
-  .day-cell:hover { border-color:var(--border); }
-  .day-cell.today { border-color:var(--teal); background:#0d2a1e; }
-  .day-cell.peak { border-color:var(--amber); background:#1f1800; }
-  .day-label { font-size:9px; color:var(--muted); letter-spacing:0.05em; }
-  .day-pct { font-size:15px; font-weight:500; }
-  .day-bar { width:28px; height:4px; border-radius:2px; background:var(--border); overflow:hidden; }
-  .day-fill { height:100%; border-radius:2px; transition:width 0.6s ease; }
-  .day-tag { font-size:8px; padding:1px 5px; border-radius:3px; font-family:var(--mono); }
+/* ── PANEL VISIBILITY ── */
+.panel { display:none; }
+.panel.active { display:contents; }
 
-  .stats-card {
-    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;
-  }
-  .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
-  .stat-box {
-    background:var(--surface2); border-radius:8px; padding:12px;
-    border:1px solid var(--border);
-  }
-  .stat-val { font-family:var(--head); font-size:22px; font-weight:800; }
-  .stat-val.teal { color:var(--teal); }
-  .stat-val.amber { color:var(--amber); }
-  .stat-val.blue { color:var(--blue); }
-  .stat-label { font-size:10px; color:var(--muted); font-family:var(--mono); margin-top:3px; line-height:1.4; }
+/* ── ALERT BOX ── */
+.alert-box {
+  background:var(--red-dim); border:1px solid var(--red);
+  border-radius:3px; padding:10px 14px;
+  display:flex; align-items:flex-start; gap:10px;
+  margin-bottom:12px; font-size:12px;
+}
+.alert-icon { color:var(--red); font-size:14px; flex-shrink:0; margin-top:1px; }
+.alert-text { line-height:1.5; }
+.alert-text strong { color:var(--red); }
 
-  .fm-card {
-    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;
-  }
-  .fm-row {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:10px 0; border-bottom:1px solid var(--border); font-size:13px;
-  }
-  .fm-row:last-child { border-bottom:none; }
-  .fm-service { display:flex; align-items:center; gap:8px; }
-  .fm-icon { width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:14px; }
-  .fm-status {
-    font-size:11px; font-family:var(--mono); padding:3px 8px; border-radius:4px;
-  }
-  .fm-status.adjusted { background:var(--teal-dim); color:var(--teal); border:1px solid var(--teal); }
-  .fm-status.fixed { background:#1f1800; color:var(--amber); border:1px solid var(--amber); }
-  .fm-saving { font-size:11px; color:var(--teal); font-family:var(--mono); }
+/* ── INSIGHT BOX ── */
+.insight {
+  background:var(--blue-dim); border:1px solid var(--blue-mid);
+  border-radius:3px; padding:12px 14px;
+  font-size:12px; line-height:1.6; color:var(--ink2); margin-top:12px;
+}
+.insight strong { color:var(--blue); }
 
-  .bottom-bar {
-    margin-top:20px; padding-top:16px; border-top:1px solid var(--border);
-    display:flex; align-items:center; justify-content:space-between;
-    font-size:11px; font-family:var(--mono); color:var(--muted);
-  }
-  .bottom-bar span { display:flex; align-items:center; gap:6px; }
-  .dot-green { width:6px; height:6px; border-radius:50%; background:var(--teal); display:inline-block; }
+/* ── FOOTER ── */
+.footer {
+  margin-top:20px; padding-top:14px; border-top:1px solid var(--border);
+  display:flex; justify-content:space-between;
+  font-family:var(--mono); font-size:10px; color:var(--muted);
+}
 
-  .week-chart { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; }
-  .bar-chart { display:flex; align-items:flex-end; gap:8px; height:160px; margin-top:16px; }
-  .bar-group { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
-  .bar-wrap { width:100%; display:flex; gap:2px; align-items:flex-end; flex:1; }
-  .bar {
-    flex:1; border-radius:3px 3px 0 0; min-height:4px; transition:height 0.6s ease;
-    cursor:pointer; position:relative;
-  }
-  .bar:hover::after {
-    content:attr(data-tip);
-    position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%);
-    background:#1a2d40; border:1px solid var(--teal); border-radius:4px;
-    padding:4px 8px; font-size:10px; white-space:nowrap; color:var(--text);
-    font-family:var(--mono); pointer-events:none; z-index:20;
-  }
-  .bar.rooms { background:linear-gradient(180deg, var(--blue), #2266aa); }
-  .bar.desks { background:linear-gradient(180deg, var(--teal), #008866); }
-  .bar-label { font-size:10px; font-family:var(--mono); color:var(--muted); }
-  .bar-day-peak .bar-label { color:var(--amber); }
-  .peak-marker {
-    font-size:8px; font-family:var(--mono); color:var(--amber); padding:2px 5px;
-    background:var(--amber-dim); border-radius:3px; border:1px solid var(--amber);
-  }
-  .chart-legend { display:flex; gap:16px; margin-top:10px; }
-  .cl-item { display:flex; align-items:center; gap:5px; font-size:11px; font-family:var(--mono); color:var(--muted); }
-  .cl-swatch { width:10px; height:10px; border-radius:2px; }
+/* ── NOTIFICATIONS ── */
+.notif-btn {
+  position:relative; background:none; border:none; cursor:pointer;
+  padding:6px 10px; margin-bottom:-2px; display:flex; align-items:center;
+  gap:6px; color:var(--muted); font-family:var(--mono); font-size:10px;
+  letter-spacing:0.05em; transition:color 0.2s; flex-shrink:0;
+}
+.notif-btn:hover { color:var(--ink); }
+.notif-bell {
+  font-size:16px; line-height:1; position:relative;
+  animation: bell-idle 4s ease-in-out infinite;
+}
+@keyframes bell-idle {
+  0%,90%,100% { transform:rotate(0deg); }
+  92% { transform:rotate(-12deg); }
+  96% { transform:rotate(12deg); }
+}
+.notif-badge {
+  position:absolute; top:-2px; right:-2px;
+  width:16px; height:16px; border-radius:50%;
+  background:var(--red); color:#fff;
+  font-size:9px; font-family:var(--mono); font-weight:600;
+  display:flex; align-items:center; justify-content:center;
+  border:1.5px solid var(--bg);
+  animation: badge-pop 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes badge-pop {
+  from { transform:scale(0); opacity:0; }
+  to   { transform:scale(1); opacity:1; }
+}
+.notif-label { font-size:10px; letter-spacing:0.06em; }
 
-  .compare-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; }
-  .compare-bar { margin-top:12px; }
-  .cb-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-  .cb-label { font-size:12px; font-family:var(--mono); width:130px; flex-shrink:0; }
-  .cb-track { flex:1; height:20px; background:var(--surface2); border-radius:4px; overflow:hidden; position:relative; border:1px solid var(--border); }
-  .cb-fill { height:100%; border-radius:4px; transition:width 1s ease; display:flex; align-items:center; padding-left:8px; }
-  .cb-fill span { font-size:11px; font-family:var(--mono); color:#000; font-weight:500; }
-  .cb-val { font-size:13px; font-family:var(--mono); width:44px; text-align:right; }
+.notif-panel {
+  position:absolute; right:0; top:calc(100% + 8px);
+  width:380px; max-height:520px; overflow-y:auto;
+  background:var(--surface);
+  border:1px solid var(--border); border-radius:6px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.5);
+  z-index:1000; overflow-x:hidden;
+  transform-origin:top right;
+  animation:panel-open 0.18s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes panel-open {
+  from { opacity:0; transform:scale(0.92) translateY(-6px); }
+  to   { opacity:1; transform:scale(1) translateY(0); }
+}
+.notif-panel.closing {
+  animation:panel-close 0.14s ease-in both;
+}
+@keyframes panel-close {
+  to { opacity:0; transform:scale(0.94) translateY(-4px); }
+}
+.notif-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px 10px;
+  border-bottom:1px solid var(--border);
+}
+.notif-header-title {
+  font-family:var(--display); font-size:14px; font-weight:600; color:var(--ink);
+}
+.notif-header-meta { font-family:var(--mono); font-size:9px; color:var(--muted); }
+.notif-clear {
+  font-family:var(--mono); font-size:9px; color:var(--blue);
+  background:none; border:none; cursor:pointer; padding:2px 6px;
+  border-radius:3px; letter-spacing:0.04em;
+  transition:background 0.15s;
+}
+.notif-clear:hover { background:var(--blue-dim); }
 
-  @keyframes enterUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-  .anim { animation:enterUp 0.5s ease both; }
+.notif-item {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:12px 16px; border-bottom:1px solid var(--border);
+  cursor:pointer; transition:background 0.15s; position:relative;
+}
+.notif-item:last-child { border-bottom:none; }
+.notif-item:hover { background:var(--surface2); }
+.notif-item.unread::before {
+  content:''; position:absolute; left:6px; top:50%;
+  transform:translateY(-50%);
+  width:5px; height:5px; border-radius:50%;
+  background:var(--blue);
+}
+.notif-item.read { opacity:0.6; }
+
+.notif-icon-wrap {
+  width:32px; height:32px; border-radius:6px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px;
+}
+.notif-item-body { flex:1; min-width:0; }
+.notif-item-title {
+  font-size:12px; font-weight:600; color:var(--ink); margin-bottom:2px;
+}
+.notif-item-detail {
+  font-size:11px; color:var(--muted); line-height:1.4; font-family:var(--mono);
+}
+.notif-item-time {
+  font-size:9px; color:var(--muted); font-family:var(--mono); margin-top:4px;
+}
+.notif-severity {
+  font-size:8px; font-family:var(--mono); padding:2px 6px; border-radius:2px;
+  border:1px solid; letter-spacing:0.05em; flex-shrink:0; align-self:flex-start; margin-top:2px;
+}
+.sev-critical { color:var(--red); border-color:var(--red); background:var(--red-dim); }
+.sev-warning  { color:var(--amber); border-color:var(--amber); background:var(--amber-dim); }
+.sev-info     { color:var(--blue); border-color:var(--blue); background:var(--blue-dim); }
+
+.notif-footer {
+  padding:8px 16px; border-top:1px solid var(--border);
+  text-align:center;
+}
+.notif-footer a {
+  font-family:var(--mono); font-size:9px; color:var(--muted);
+  text-decoration:none; letter-spacing:0.06em;
+  transition:color 0.15s;
+}
+.notif-footer a:hover { color:var(--blue); }
+
+/* ── NOTIF CATEGORY LIST ── */
+.notif-cat-item {
+  display:flex; align-items:center; gap:12px;
+  padding:13px 16px; border-bottom:1px solid var(--border);
+  cursor:pointer; transition:background 0.15s; position:relative;
+}
+.notif-cat-item:last-child { border-bottom:none; }
+.notif-cat-item:hover { background:var(--surface2); }
+.notif-cat-icon {
+  width:36px; height:36px; border-radius:8px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:18px;
+}
+.notif-cat-body { flex:1; min-width:0; }
+.notif-cat-title { font-size:12px; font-weight:600; color:var(--ink); margin-bottom:2px; }
+.notif-cat-meta  { font-family:var(--mono); font-size:10px; color:var(--muted); }
+.notif-cat-right { display:flex; flex-direction:column; align-items:flex-end; gap:5px; flex-shrink:0; }
+.notif-cat-count {
+  font-family:var(--mono); font-size:10px; font-weight:600;
+  padding:2px 8px; border-radius:10px;
+}
+.notif-cat-count.red    { background:var(--red-dim);   color:var(--red);   border:1px solid var(--red); }
+.notif-cat-count.amber  { background:var(--amber-dim); color:var(--amber); border:1px solid var(--amber); }
+.notif-cat-count.blue   { background:var(--blue-dim);  color:var(--blue);  border:1px solid var(--blue); }
+.notif-cat-chevron { font-size:10px; color:var(--muted); }
+
+/* ── NOTIF DRILL-DOWN ── */
+.notif-back {
+  display:flex; align-items:center; gap:8px;
+  padding:10px 16px; border-bottom:1px solid var(--border);
+  cursor:pointer; transition:background 0.15s;
+  font-family:var(--mono); font-size:10px; color:var(--muted);
+  letter-spacing:0.05em;
+}
+.notif-back:hover { background:var(--surface2); color:var(--ink); }
+.notif-back-arrow { font-size:13px; }
+.notif-back-label { font-size:10px; }
+
+.notif-drill-item {
+  padding:12px 16px; border-bottom:1px solid var(--border);
+  cursor:pointer; transition:background 0.15s; position:relative;
+}
+.notif-drill-item:last-child { border-bottom:none; }
+.notif-drill-item:hover { background:var(--surface2); }
+.notif-drill-item.read { opacity:0.55; }
+.notif-drill-item.unread::before {
+  content:''; position:absolute; left:6px; top:50%;
+  transform:translateY(-50%);
+  width:5px; height:5px; border-radius:50%; background:var(--blue);
+}
+.notif-drill-header { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:6px; }
+.notif-drill-title  { font-size:12px; font-weight:600; color:var(--ink); line-height:1.3; }
+.notif-drill-detail { font-family:var(--mono); font-size:10px; color:var(--muted); line-height:1.5; margin-bottom:5px; }
+.notif-drill-footer { display:flex; align-items:center; justify-content:space-between; }
+.notif-drill-time   { font-family:var(--mono); font-size:9px; color:var(--muted); }
+.notif-drill-action {
+  font-family:var(--mono); font-size:9px; color:var(--blue);
+  border:1px solid var(--blue-mid); padding:2px 7px; border-radius:2px;
+  background:var(--blue-dim); cursor:pointer; transition:background 0.15s;
+}
+.notif-drill-action:hover { background:var(--blue); color:#fff; }
 </style>
 </head>
 <body>
 <div class="wrap">
-
-  <header>
-    <div class="logo">
-      <div class="logo-mark">WP</div>
-      <div>
-        <div class="logo-text">WorkPulse</div>
-        <div class="logo-sub">VALMET — LENTOKENTÄNKATU · MOD30</div>
-      </div>
-    </div>
-    <div class="header-meta">
-      <div class="badge-container" id="badgeContainer"></div>
-      <div class="live-pill"><div class="live-dot"></div>LIVE DEMO</div>
-      <div class="clock" id="clock">—</div>
-    </div>
-  </header>
-
-  <div class="navbar" id="navbar">
-    <button class="navbar-item active" onclick="switchBuilding('home', this)">🏠 Home</button>
-    <button class="navbar-item building" onclick="switchBuilding('buildingA', this)">Building A</button>
-    <button class="navbar-item building" onclick="switchBuilding('buildingB', this)">Building B</button>
-  </div>
-
-  <div class="nudge-banner" id="nudgeBanner">
-    <div class="nudge-icon">☀️</div>
-    <div class="nudge-body">
-      <div class="nudge-label">▸ MORNING BRIEFING · TEAMS BOT</div>
-      <div class="nudge-text" id="nudgeText"></div>
-      <div class="nudge-tags" id="nudgeTags"></div>
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <img src="./workpulse-logo-stacked_3.png" alt="WorkPulse Logo" width="64" height="64" style="border-radius:4px">
+    <div>
+      <div class="logo-name">WorkPulse</div>
+      <div class="logo-sub">VALMET LENTOKENTÄNKATU · MOD30 · TAMPERE</div>
     </div>
   </div>
-
-  <div id="notificationsContainer" style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;"></div>
-
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('floormap',this)">Floor Map</button>
-    <button class="tab" onclick="switchTab('weekview',this)">Weekly Pattern</button>
-    <button class="tab" onclick="switchTab('zones',this)">Zone Intelligence</button>
-    <button class="tab" onclick="switchTab('fm',this)">FM Dashboard</button>
+  <div class="header-right">
+    <div class="dataset-count">6 DATASETS</div>
+    <div class="badge-live"><div class="live-dot"></div>LIVE DEMO</div>
+    <div class="clock" id="clock">—</div>
   </div>
+</header>
 
-  <div id="tab-floormap" class="panel active">
-    <div class="main-grid">
-      <div class="floor-card anim">
-        <div class="card-header">
-          <div>
-            <div class="card-title">MOD30 — Floor 2 Live Occupancy</div>
-            <div class="card-sub">HOVER ZONES FOR DETAILS · CLICK LAYER TO SWITCH VIEW</div>
-          </div>
-          <div class="layer-btns">
-            <button class="layer-btn on" onclick="setLayer('util',this)">Utilisation</button>
-            <button class="layer-btn" onclick="setLayer('type',this)">Zone Type</button>
-          </div>
-        </div>
-        <div class="floor-map" id="floorMap"></div>
-        <div class="legend" id="mapLegend"></div>
-      </div>
-
-      <div class="right-col">
-        <div class="forecast-card anim" style="animation-delay:0.1s">
-          <div class="card-header">
-            <div>
-              <div class="card-title">5-Day Forecast</div>
-              <div class="card-sub">DAY-OF-WEEK MODEL + SEASONAL</div>
-            </div>
-          </div>
-          <div class="day-row" id="dayRow"></div>
-        </div>
-
-        <div class="stats-card anim" style="animation-delay:0.2s">
-          <div class="card-header">
-            <div class="card-title">Key Findings</div>
-          </div>
-          <div class="stats-grid">
-            <div class="stat-box">
-              <div class="stat-val teal">51.5%</div>
-              <div class="stat-label">84-zone named desk utilisation</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-val amber">24.8%</div>
-              <div class="stat-label">Generic numbered desk utilisation</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-val teal">2×</div>
-              <div class="stat-label">Users self-sort to good zones already</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-val blue">3/628</div>
-              <div class="stat-label">Days ever exceeding 45% combined</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<!-- NUDGE BANNER -->
+<div class="nudge">
+  <div style="font-size:24px;flex-shrink:0;margin-top:2px">☀️</div>
+  <div style="flex:1">
+    <div class="nudge-label">▸ MORNING BRIEFING · TEAMS / SLACK BOT · AUTO-GENERATED</div>
+    <div class="nudge-msg" id="nudgeMsg"></div>
+    <div class="nudge-pills" id="nudgePills"></div>
   </div>
-
-  <div id="tab-weekview" class="panel">
-    <div class="main-grid">
-      <div class="week-chart anim">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Weekly Utilisation Pattern</div>
-            <div class="card-sub">3-YEAR AVERAGE · ROOMS VS DESKS</div>
-          </div>
-        </div>
-        <div class="bar-chart" id="barChart"></div>
-        <div class="chart-legend">
-          <div class="cl-item"><div class="cl-swatch" style="background:var(--blue)"></div>Meeting Rooms</div>
-          <div class="cl-item"><div class="cl-swatch" style="background:var(--teal)"></div>Desks</div>
-        </div>
-      </div>
-
-      <div class="right-col">
-        <div class="stats-card anim" style="animation-delay:0.1s">
-          <div class="card-header"><div class="card-title">🔥 Top 5 Popular Zones</div></div>
-          <div id="topZonesContainer" style="margin-top:12px;"></div>
-        </div>
-
-        <div class="stats-card anim" style="animation-delay:0.2s">
-          <div class="card-header"><div class="card-title">Pattern Insights</div></div>
-          <div style="margin-top:12px; display:flex; flex-direction:column; gap:10px;">
-            <div class="stat-box">
-              <div class="stat-val amber">Tuesday</div>
-              <div class="stat-label">Peak day — every single year in dataset</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-val teal">Friday</div>
-              <div class="stat-label">Quietest day — 18% rooms / 14% desks avg</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-val blue">Never full</div>
-              <div class="stat-label">Building capacity always available — no day ever ran short</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div style="flex-shrink:0;text-align:right">
+    <div style="font-family:var(--mono);font-size:9px;color:#6a6660;letter-spacing:0.08em;margin-bottom:4px">FM CHANNEL</div>
+    <div style="font-family:var(--mono);font-size:10px;color:#f0bf6a" id="fmQuickMsg"></div>
   </div>
-
-  <div id="tab-zones" class="panel">
-    <div class="main-grid">
-      <div class="compare-card anim">
-        <div class="card-header">
-          <div class="card-title">Zone Utilisation Comparison</div>
-          <div class="card-sub">NAMED 84-ZONES vs GENERIC DESKS</div>
-        </div>
-        <div class="compare-bar" id="compareBar"></div>
-      </div>
-
-      <div class="right-col">
-        <div class="stats-card anim" style="animation-delay:0.1s">
-          <div class="card-header"><div class="card-title">What This Means</div></div>
-          <div style="margin-top:12px; font-size:13px; line-height:1.8; color:#8aa0b0;">
-            <p>Users have <strong style="color:var(--teal)">already figured out</strong> where the good desks are — they just don't know they know it.</p>
-            <br>
-            <p>Newcomers have <strong style="color:var(--amber)">no way to access</strong> this knowledge — they default to generic desks and get a worse experience.</p>
-            <br>
-            <p>A nudge system closes this gap at <strong style="color:var(--teal)">near-zero cost</strong> because the model is already trained in the data.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="tab-fm" class="panel">
-    <div class="main-grid">
-      <div class="fm-card anim">
-        <div class="card-header">
-          <div class="card-title">FM Operations — Today's Forecast View</div>
-          <div class="card-sub">DYNAMIC STAFFING BASED ON PREDICTED OCCUPANCY</div>
-        </div>
-
-        <div style="margin-top:4px;">
-          <div style="font-size:11px; font-family:var(--mono); color:var(--muted); margin-bottom:12px; padding:8px 12px; background:var(--surface2); border-radius:6px; border-left:3px solid var(--teal);">
-            FORECAST TODAY — <span style="color:var(--text)" id="fmDay"></span> · Expected <span style="color:var(--teal)" id="fmPeople"></span> people · Rooms <span style="color:var(--teal)" id="fmRooms"></span> · Desks <span style="color:var(--teal)" id="fmDesks"></span>
-          </div>
-
-          <div class="fm-row">
-            <div class="fm-service">
-              <div class="fm-icon" style="background:#1a2e20">🧹</div>
-              <div>
-                <div style="font-size:13px;">Cleaning</div>
-                <div style="font-size:11px; color:var(--muted); font-family:var(--mono);">Dynamic schedule based on headcount</div>
-              </div>
-            </div>
-            <div style="text-align:right">
-              <div class="fm-status adjusted" id="cleanStatus">ADJUSTED</div>
-              <div class="fm-saving" id="cleanSaving"></div>
-            </div>
-          </div>
-
-          <div class="fm-row">
-            <div class="fm-service">
-              <div class="fm-icon" style="background:#1a1e2e">☕</div>
-              <div>
-                <div style="font-size:13px;">Catering</div>
-                <div style="font-size:11px; color:var(--muted); font-family:var(--mono);">Order quantity matched to attendance</div>
-              </div>
-            </div>
-            <div style="text-align:right">
-              <div class="fm-status adjusted" id="caterStatus">ADJUSTED</div>
-              <div class="fm-saving" id="caterSaving"></div>
-            </div>
-          </div>
-
-          <div class="fm-row">
-            <div class="fm-service">
-              <div class="fm-icon" style="background:#2a1a1a">🚪</div>
-              <div>
-                <div style="font-size:13px;">Access Control</div>
-                <div style="font-size:11px; color:var(--muted); font-family:var(--mono);">Evening lock-down schedule</div>
-              </div>
-            </div>
-            <div style="text-align:right">
-              <div class="fm-status" id="accessStatus">FIXED SCHEDULE</div>
-              <div class="fm-saving" style="color:var(--amber); font-size:11px; font-family:var(--mono)">→ OPTIMISE IN PHASE 2</div>
-            </div>
-          </div>
-
-          <div class="fm-row">
-            <div class="fm-service">
-              <div class="fm-icon" style="background:#0d1e2a">❄️</div>
-              <div>
-                <div style="font-size:13px;">HVAC Zones</div>
-                <div style="font-size:11px; color:var(--muted); font-family:var(--mono);">Activate only occupied zones</div>
-              </div>
-            </div>
-            <div style="text-align:right">
-              <div class="fm-status adjusted">ADJUSTED</div>
-              <div class="fm-saving" id="hvacSaving"></div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top:16px; padding:14px; background:var(--surface2); border-radius:8px; border:1px solid var(--border);">
-          <div style="font-size:10px; font-family:var(--mono); color:var(--muted); margin-bottom:8px;">SENSOR ALERT</div>
-          <div style="font-size:13px; display:flex; align-items:center; gap:8px;">
-            <span style="color:var(--red)">⚠</span>
-            <span><strong style="color:var(--red)">2.krs Neukkari</strong> — sensor battery at 2% · Last ping Feb 2026 · <span style="color:var(--muted)">Maintenance ticket recommended</span></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="right-col">
-        <div class="stats-card anim" style="animation-delay:0.1s">
-          <div class="card-header"><div class="card-title">Current vs Optimised</div></div>
-          <div class="stats-grid" style="margin-top:12px;">
-            <div class="stat-box">
-              <div class="stat-val amber" style="font-size:18px;">Fixed</div>
-              <div class="stat-label">Cleaning runs regardless of 40 or 140 people</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-val teal" style="font-size:18px;">Dynamic</div>
-              <div class="stat-label">Service levels matched to actual demand</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-val teal">~20%</div>
-              <div class="stat-label">Estimated service cost reduction (low days)</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-val blue">Day 1</div>
-              <div class="stat-label">Model is trained — deploy immediately</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="bottom-bar">
-    <span><div class="dot-green"></div>Sensor data · Valmet Lentokentänkatu · 389 sensors · 628 days</span>
-    <span>Built at Hackathon 2026 · WorkPulse MVP v0.1</span>
-  </div>
-
 </div>
 
-<div class="zone-tooltip" id="tooltip"></div>
+<!-- TABS -->
+<div class="tabs">
+  <div class="tabs-left">
+    <button class="tab active" onclick="switchTab('map',this)">Floor Map</button>
+    <button class="tab" onclick="switchTab('week',this)">Weekly Pattern</button>
+    <button class="tab" onclick="switchTab('zones',this)">Zone Intelligence</button>
+    <button class="tab" onclick="switchTab('fm',this)">FM Dashboard</button>
+    <button class="tab" onclick="switchTab('xbldg',this)">Cross-Building </button>
+    <button class="tab" onclick="switchTab('cost',this)">Cost Impact </button>
+  </div>
+  <div style="position:relative;margin-bottom:-2px;">
+    <button class="notif-btn" id="notifBtn" onclick="toggleNotif(event)">
+      <span class="notif-bell" id="notifBell">🔔</span>
+      <span class="notif-badge" id="notifBadge">3</span>
+      <span class="notif-label">NOTIFICATIONS</span>
+    </button>
+    <div class="notif-panel" id="notifPanel" style="display:none"></div>
+  </div>
+</div>
 
-<div class="badge-popup" id="sensorPopup"></div>
-<div class="badge-popup" id="anomalyPopup"></div>
-<div class="badge-popup" id="maintenancePopup"></div>
+<!-- ═══ TAB: FLOOR MAP ═══ -->
+<div id="tab-map" class="panel active">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">MOD30 — Floor 1 Live Occupancy</div>
+          <div class="card-sub">HOVER FOR DETAILS · SWITCH LAYER BELOW</div>
+        </div>
+        <div class="layer-btns">
+          <button class="lbtn on" onclick="setLayer('util',this)">Utilisation</button>
+          <button class="lbtn" onclick="setLayer('clean',this)">Cleaning</button>
+          <button class="lbtn" onclick="setLayer('type',this)">Zone Type</button>
+        </div>
+      </div>
+      <div class="floor-map" id="floorMap">
+        <div class="floor-grid-lines"></div>
+      </div>
+      <div class="legend" id="mapLegend"></div>
+    </div>
+    <div class="col">
+      <div class="card delay1">
+        <div class="card-title">5-Day Forecast</div>
+        <div class="card-sub">DOW MODEL + SEASONAL + FI HOLIDAYS</div>
+        <div class="day-strip" id="dayStrip" style="margin-top:4px"></div>
+        <div class="insight">
+          <strong>Model accuracy:</strong> Day-of-week + month alone explains 73% of room variance and 68% of desk variance (R² from 628 days). Finnish public holidays add a further correction layer.
+        </div>
+      </div>
+      <div class="card delay2">
+        <div class="card-title">Key Metrics</div>
+        <div class="card-sub">FROM 628-DAY DATASET</div>
+        <div class="stats-grid">
+          <div class="sbox"><div class="sbox-val blue">51.5%</div><div class="sbox-label">84-zone desk utilisation</div></div>
+          <div class="sbox"><div class="sbox-val amber">24.8%</div><div class="sbox-label">Generic desk utilisation</div></div>
+          <div class="sbox"><div class="sbox-val green">2×</div><div class="sbox-label">User self-sort rate to good zones</div></div>
+          <div class="sbox"><div class="sbox-val red">53.8%</div><div class="sbox-label">SLA violation rate · work orders</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB: WEEKLY PATTERN ═══ -->
+<div id="tab-week" class="panel">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Weekly Utilisation + SLA Violation Rate</div>
+          <div class="card-sub">3-YEAR AVERAGE · ROOMS · DESKS · SLA %</div>
+        </div>
+        <div class="layer-btns">
+          <button class="lbtn on" onclick="setWeekLayer('all',this)">All</button>
+          <button class="lbtn" onclick="setWeekLayer('occ',this)">Occupancy</button>
+          <button class="lbtn" onclick="setWeekLayer('sla',this)">SLA</button>
+        </div>
+      </div>
+      <div id="weekChart" style="position:relative;padding-top:8px">
+        <div class="barchart" id="barChart"></div>
+        <div class="chart-legend" id="chartLegend"></div>
+      </div>
+      <div class="insight" style="margin-top:14px">
+        <strong>Key finding:</strong> SLA violations peak at 65% on Tuesdays — when occupancy is highest. This proves that current fixed-schedule FM services can't absorb demand surges. A demand-aware model would pre-position staff on Tuesdays and scale back on Fridays (38% violation rate).
+      </div>
+    </div>
+    <div class="col">
+      <div class="card delay1">
+        <div class="card-title">Finnish Holiday Overlay</div>
+        <div class="card-sub">STRUCTURAL DEMAND SUPPRESSORS</div>
+        <div style="margin-top:4px;display:flex;flex-direction:column;gap:8px">
+          <div id="holidayList"></div>
+        </div>
+      </div>
+      <div class="card delay2">
+        <div class="card-title">Pattern Consistency</div>
+        <div class="card-sub">YEAR-BY-YEAR COMPARISON</div>
+        <div id="yearConsistency" style="margin-top:4px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB: ZONE INTELLIGENCE ═══ -->
+<div id="tab-zones" class="panel">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Zone Utilisation vs Contracted Cleaning Frequency</div>
+      <div class="card-sub">OCCUPANCY DATA + CLEANING CONTRACT · LIITE_4B_CLEANING_LENTOKENTÄNKATU.XLSX</div>
+      <div id="zoneCompare" style="margin-top:4px"></div>
+    </div>
+    <div class="col">
+      <div class="card delay1">
+        <div class="card-title">Cleaning Mismatch Analysis</div>
+        <div class="card-sub">CONTRACT FREQUENCY VS ACTUAL NEED</div>
+        <div id="cleanMismatch" style="margin-top:4px"></div>
+      </div>
+      <div class="card delay2">
+        <div class="card-title">The Core Insight</div>
+        <div class="card-sub">WHY USERS DON'T KNOW WHAT THEY KNOW</div>
+        <div style="font-size:12.5px;line-height:1.8;color:var(--ink2); margin-top:4px">
+          <p>Users have <strong>already voted with their feet</strong> — 51.5% utilisation in named 84-zones vs 24.8% in generic desks. The preference is real and consistent.</p>
+          <br>
+          <p>But <strong>newcomers have no map</strong>. They default to the generic grid and get a worse experience — not because the building is bad, but because the knowledge isn't shared.</p>
+          <br>
+          <p>The cleaning contract makes this worse: generic desks are cleaned at the <strong>same frequency</strong> as hot zones regardless of actual use. Resources follow the contract, not the demand.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB: FM DASHBOARD ═══ -->
+<div id="tab-fm" class="panel">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Facilities Operations — Today</div>
+          <div class="card-sub">DYNAMIC SCHEDULING · FORECAST-DRIVEN</div>
+        </div>
+      </div>
+      <div style="background:var(--surface2);border-radius:3px;padding:10px 14px;border:1px solid var(--border);margin-bottom:14px;font-family:var(--mono);font-size:11px;border-left:3px solid var(--blue)">
+        FORECAST <span style="color:var(--ink);font-weight:500" id="fmDayLabel"></span> · <span style="color:var(--blue)" id="fmPeopleLabel"></span> expected · Rooms <span style="color:var(--blue)" id="fmRoomsPct"></span> · Desks <span style="color:var(--blue)" id="fmDesksPct"></span>
+      </div>
+
+      <div class="fm-row">
+        <div class="fm-svc">
+          <div class="fm-ico">🧹</div>
+          <div><div class="fm-name">Cleaning</div><div class="fm-note">From cleaning contract · dynamic allocation</div></div>
+        </div>
+        <div class="fm-right">
+          <div class="fm-badge opt" id="cleanBadge">ADJUSTED</div>
+          <div class="fm-saving" id="cleanDetail"></div>
+        </div>
+      </div>
+      <div class="fm-row">
+        <div class="fm-svc">
+          <div class="fm-ico">☕</div>
+          <div><div class="fm-name">Catering</div><div class="fm-note">Order quantity matched to headcount forecast</div></div>
+        </div>
+        <div class="fm-right">
+          <div class="fm-badge opt">ADJUSTED</div>
+          <div class="fm-saving" id="caterDetail"></div>
+        </div>
+      </div>
+      <div class="fm-row">
+        <div class="fm-svc">
+          <div class="fm-ico">❄️</div>
+          <div><div class="fm-name">HVAC Zones</div><div class="fm-note">Mod10/Mod15 offline on low-occupancy days</div></div>
+        </div>
+        <div class="fm-right">
+          <div class="fm-badge opt" id="hvacBadge">ADJUSTED</div>
+          <div class="fm-saving" id="hvacDetail"></div>
+        </div>
+      </div>
+      <div class="fm-row">
+        <div class="fm-svc">
+          <div class="fm-ico">🚨</div>
+          <div><div class="fm-name">SLA Risk Flag</div><div class="fm-note">Work orders · 53.8% base violation rate</div></div>
+        </div>
+        <div class="fm-right">
+          <div class="fm-badge" id="slaBadge">CHECKING</div>
+          <div class="fm-saving" id="slaDetail"></div>
+        </div>
+      </div>
+      <div class="fm-row">
+        <div class="fm-svc">
+          <div class="fm-ico">🚪</div>
+          <div><div class="fm-name">Access Control</div><div class="fm-note">Evening schedule currently fixed</div></div>
+        </div>
+        <div class="fm-right">
+          <div class="fm-badge fix">PHASE 2</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--amber)">→ optimise in month 2</div>
+        </div>
+      </div>
+
+      <div class="alert-box" style="margin-top:12px">
+        <div class="alert-icon">⚠</div>
+        <div class="alert-text"><strong>Sensor alert:</strong> 2.krs Neukkari — battery 2%, last ping Feb 2026. Confirmed by alarm log. Maintenance ticket required before live data can be trusted for floor 2.</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card delay1">
+        <div class="card-title">SLA by Day of Week</div>
+        <div class="card-sub">WORK_ORDERS_ANONYMIZED · IS_SLA_VIOLATION</div>
+        <div class="sla-grid" id="slaGrid" style="margin-top:6px"></div>
+      </div>
+      <div class="card delay2">
+        <div class="card-title">Fixed vs Dynamic</div>
+        <div class="card-sub">CURRENT STATE VS PROPOSED</div>
+        <div class="stats-grid" style="margin-top:4px">
+          <div class="sbox"><div class="sbox-val amber" style="font-size:18px">Fixed</div><div class="sbox-label">Same cleaning run whether 40 or 140 people arrive</div></div>
+          <div class="sbox"><div class="sbox-val green" style="font-size:18px">Dynamic</div><div class="sbox-label">Services scale with forecast headcount</div></div>
+          <div class="sbox"><div class="sbox-val green">~20%</div><div class="sbox-label">Estimated service cost reduction on low-occupancy days</div></div>
+          <div class="sbox"><div class="sbox-val blue">Day 1</div><div class="sbox-label">Model already trained — deploy immediately</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB: CROSS-BUILDING ═══ -->
+<div id="tab-xbldg" class="panel">
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div class="card">
+      <div class="card-title">Cross-Building Pattern Validation</div>
+      <div class="card-sub">NOVAPROP AURORA · HORIZON · MERIDIAN + VALMET · *_2026-05-27.JSON + OCCUPANCY CSVS</div>
+      <div class="bldg-grid" id="bldgGrid" style="margin-top:4px"></div>
+      <div class="insight" style="margin-top:14px">
+        <strong>Building-agnostic proof:</strong> All four buildings independently show Tuesday as peak, Friday as trough, and summer/winter suppression. The forecast model is not specific to Valmet — it is a structural property of hybrid-working office buildings. One calibration run per building (4 weeks of data) is sufficient to deploy the same nudge system.
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card delay1">
+        <div class="card-title">Peak Day Agreement</div>
+        <div class="card-sub">ALL BUILDINGS</div>
+        <div id="peakAgreement" style="margin-top:6px"></div>
+      </div>
+      <div class="card delay2">
+        <div class="card-title">Quiet Day Agreement</div>
+        <div class="card-sub">ALL BUILDINGS</div>
+        <div id="quietAgreement" style="margin-top:6px"></div>
+      </div>
+      <div class="card delay3">
+        <div class="card-title">Rollout Estimate</div>
+        <div class="card-sub">PORTFOLIO SCALING</div>
+        <div id="rolloutEst" style="margin-top:6px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB: COST IMPACT ═══ -->
+<div id="tab-cost" class="panel">
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div class="cost-hero">
+      <div class="cost-hero-label">ESTIMATED ANNUAL SAVING · THIS BUILDING · YEAR 1</div>
+      <div class="cost-hero-val">€22,400</div>
+      <div class="cost-hero-sub">From 3 data sources · cleaning contract + work orders + sensor data · conservative estimate</div>
+    </div>
+    <div class="cost-breakdown" id="costBreakdown"></div>
+    <div class="grid-2-1">
+      <div class="card">
+        <div class="card-title">Cleaning Over-Service Detail</div>
+        <div class="card-sub">LIITE_4B_CLEANING_LENTOKENTÄNKATU.XLSX + DESK UTILISATION</div>
+        <div id="cleaningDetail" style="margin-top:4px"></div>
+      </div>
+      <div class="card delay1">
+        <div class="card-title">Portfolio Projection</div>
+        <div class="card-sub">IF DEPLOYED ACROSS ALL BUILDINGS</div>
+        <div id="portfolioProj" style="margin-top:6px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>6 datasets · 389 sensors · 628 working days · Valmet Lentokentänkatu + NovaProp Aurora/Horizon/Meridian</span>
+  <span>WorkPulse v2.0 · Luotea Hackathon 2026</span>
+</div>
+</div>
+
+<div class="tt" id="tt"></div>
 
 <script>
-const TODAY_IDX = new Date().getDay();
-const DAY_DATA = [
-  { rooms:28, desks:26, label:'Mon' },
-  { rooms:38, desks:33, label:'Tue', peak:true },
-  { rooms:32, desks:29, label:'Wed' },
-  { rooms:24, desks:22, label:'Thu' },
-  { rooms:18, desks:14, label:'Fri' },
-];
+// ═══════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════
+
+const TODAY_JS = new Date().getDay(); // 0=Sun
 const jsToIdx = {1:0,2:1,3:2,4:3,5:4};
-const todayIdx = jsToIdx[TODAY_IDX] !== undefined ? jsToIdx[TODAY_IDX] : 0;
+const todayIdx = jsToIdx[TODAY_JS] !== undefined ? jsToIdx[TODAY_JS] : 1;
+
+const DAYS_DATA = [
+  { lbl:'Mon', rooms:28, desks:26, sla:48 },
+  { lbl:'Tue', rooms:38, desks:33, sla:65, peak:true },
+  { lbl:'Wed', rooms:32, desks:29, sla:55 },
+  { lbl:'Thu', rooms:24, desks:22, sla:50 },
+  { lbl:'Fri', rooms:18, desks:14, sla:38 },
+];
 
 const ZONES = [
-  { id:'coffee', name:'Coffee Lounge', type:'lounge', util:62, cap:20, sensor:96, x:4, y:4, w:22, h:14 },
-  { id:'k11', name:'K11', type:'booth', util:58, cap:4, sensor:91, x:28, y:4, w:10, h:14 },
-  { id:'k12', name:'K12', type:'booth', util:56, cap:4, sensor:90, x:40, y:4, w:10, h:14 },
-  { id:'k13', name:'K13', type:'booth', util:54, cap:4, sensor:89, x:52, y:4, w:10, h:14 },
-  { id:'k14', name:'K14', type:'booth', util:52, cap:4, sensor:88, x:64, y:4, w:10, h:14 },
-  { id:'norppa', name:'Norppa', type:'meeting', util:44, cap:8, sensor:87, x:4, y:22, w:18, h:20 },
-  { id:'karhu', name:'Karhu', type:'meeting', util:41, cap:10, sensor:86, x:24, y:22, w:20, h:20 },
-  { id:'hirvi', name:'Hirvi', type:'meeting', util:38, cap:8, sensor:85, x:46, y:22, w:18, h:20 },
-  { id:'mustikka', name:'Mustikka', type:'meeting', util:35, cap:6, sensor:84, x:66, y:22, w:18, h:20 },
-  { id:'zone84a', name:'84-Zone A', type:'desk84', util:53, cap:30, sensor:91, x:4, y:46, w:38, h:18 },
-  { id:'zone84b', name:'84-Zone B', type:'desk84', util:50, cap:28, sensor:88, x:44, y:46, w:40, h:18 },
-  { id:'gen1', name:'Desk Area 1–40', type:'generic', util:25, cap:40, sensor:74, x:4, y:68, w:38, h:16 },
-  { id:'gen2', name:'Desk Area 41–80', type:'generic', util:24, cap:40, sensor:72, x:44, y:68, w:40, h:16 },
-  { id:'rame', name:'Räme', type:'meeting', util:18, cap:6, sensor:83, x:78, y:4, w:18, h:18 },
-  { id:'k8', name:'K8', type:'booth', util:22, cap:4, sensor:84, x:78, y:24, w:18, h:14 },
+  // ── TOP ROW: Coffee Lounge — large tall block on left ──
+  { id:'coffee', name:'Coffee Lounge', type:'lounge', util:62, clean:'5×/wk', cleanNum:5, cleanCost:'HIGH', cap:20, sensor:96, x:2, y:2, w:22, h:21 },
+  // ── TOP ROW: 3 K-booths in a row, attached to right of Coffee Lounge ──
+  { id:'k11', name:'K11', type:'booth', util:58, clean:'3×/wk', cleanNum:3, cleanCost:'OK', cap:4, sensor:91, x:25, y:5, w:12, h:18 },
+  { id:'k12', name:'K12', type:'booth', util:56, clean:'3×/wk', cleanNum:3, cleanCost:'OK', cap:4, sensor:90, x:38, y:5, w:12, h:18 },
+  { id:'k13', name:'K13', type:'booth', util:54, clean:'3×/wk', cleanNum:3, cleanCost:'OK', cap:4, sensor:89, x:51, y:5, w:12, h:18 },
+  // ── TOP RIGHT: Räme (upper of the two stacked right blocks) ──
+  { id:'rame', name:'Räme', type:'meeting', util:18, clean:'2×/wk', cleanNum:2, cleanCost:'REVIEW', cap:6, sensor:83, x:76, y:2, w:20, h:11 },
+  // ── TOP RIGHT: K8 (lower of the two stacked right blocks) ──
+  { id:'k8', name:'K8', type:'booth', util:22, clean:'2×/wk', cleanNum:2, cleanCost:'REVIEW', cap:4, sensor:84, x:76, y:14, w:20, h:10 },
+  // ── MIDDLE LEFT GROUP: Norppa + Karhu side by side ──
+  { id:'norppa', name:'Norppa', type:'meeting', util:44, clean:'3×/wk', cleanNum:3, cleanCost:'OK', cap:8, sensor:87, x:2, y:32, w:19, h:16 },
+  { id:'karhu', name:'Karhu', type:'meeting', util:41, clean:'3×/wk', cleanNum:3, cleanCost:'OK', cap:10, sensor:86, x:22, y:32, w:19, h:16 },
+  // ── MIDDLE RIGHT GROUP: Hirvi + Mustikka side by side ──
+  { id:'hirvi', name:'Hirvi', type:'meeting', util:38, clean:'3×/wk', cleanNum:3, cleanCost:'OK', cap:8, sensor:85, x:44, y:32, w:18, h:16 },
+  { id:'mustikka', name:'Mustikka', type:'meeting', util:35, clean:'2×/wk', cleanNum:2, cleanCost:'OK', cap:6, sensor:84, x:63, y:32, w:18, h:16 },
+  // ── BOTTOM LEFT: large rect split horizontally ──
+  { id:'zone84a', name:'84-Zone A', type:'desk84', util:53, clean:'5×/wk', cleanNum:5, cleanCost:'HIGH', cap:30, sensor:91, x:2, y:55, w:43, h:14 },
+  { id:'gen1', name:'Desks 1–40', type:'generic', util:25, clean:'5×/wk', cleanNum:5, cleanCost:'WASTE', cap:40, sensor:74, x:2, y:70, w:43, h:14 },
+  // ── BOTTOM RIGHT: large rect split horizontally ──
+  { id:'zone84b', name:'84-Zone B', type:'desk84', util:50, clean:'5×/wk', cleanNum:5, cleanCost:'HIGH', cap:28, sensor:88, x:48, y:55, w:45, h:14 },
+  { id:'gen2', name:'Desks 41–80', type:'generic', util:24, clean:'5×/wk', cleanNum:5, cleanCost:'WASTE', cap:40, sensor:72, x:48, y:70, w:45, h:14 },
 ];
 
+<<<<<<< HEAD
 const NOTIFICATIONS_DATA = [
   {
     type: 'sensor', icon: '🪫', title: 'Sensor Battery Critical',
@@ -803,34 +969,62 @@ const NOTIFICATIONS_DATA = [
     details: 'Konferenssisalien lisäpuhdistus on ohjelmoitu seuraavalle päivälle. Lisäpuhdistus tehdään klo 14:00 jälkeen, ei vaikuta normaaliin aikatauluun.',
     priority: 1, ticket: 'TICKET-2406', time: '2 h'
   },
+=======
+const HOLIDAYS = [
+  { name:'Juhannus (Midsummer)', date:'Late June', effect:'−35% for 2 weeks', month:6 },
+  { name:'Joulu (Christmas)', date:'Dec 23–Jan 2', effect:'−90% for 2 weeks', month:12 },
+  { name:'Pääsiäinen (Easter)', date:'Variable April', effect:'−25% for 1 week', month:4 },
+  { name:'Vappu (May Day)', date:'Apr 30–May 1', effect:'−15% adjacent days', month:5 },
+>>>>>>> origin/main
 ];
 
-function utilColor(u) {
-  if (u >= 60) return { bg:'#1a0d0d', border:'#ff4d4d', text:'#ff6666' };
-  if (u >= 50) return { bg:'#140d1a', border:'#ff7f00', text:'#ffa319' };
-  if (u >= 40) return { bg:'#0d1a14', border:'#ffcc00', text:'#ffdd33' };
-  if (u >= 25) return { bg:'#0d1a2a', border:'#4a9eff', text:'#6ab8ff' };
-  if (u >= 10) return { bg:'#0d2a1e', border:'#00c49a', text:'#00c49a' };
-  return { bg:'#1a2210', border:'#7aa831', text:'#7aa831' };
+const BUILDINGS = [
+  { name:'Valmet', loc:'Lentokentänkatu · Tampere', peak:38, quiet:18, peakDay:'Tue', quietDay:'Fri', active:true, rooms:36, desks:176 },
+  { name:'Aurora', loc:'NovaProp · Building A', peak:41, quiet:16, peakDay:'Tue', quietDay:'Fri', active:false, rooms:24, desks:120 },
+  { name:'Horizon', loc:'NovaProp · Building B', peak:38, quiet:14, peakDay:'Tue', quietDay:'Fri', active:false, rooms:28, desks:140 },
+  { name:'Meridian', loc:'NovaProp · Building C', peak:44, quiet:18, peakDay:'Tue', quietDay:'Fri', active:false, rooms:32, desks:160 },
+];
+
+const YEARS = [
+  { yr:2024, tuePeak:37, friFri:17 },
+  { yr:2025, tuePeak:39, friQuiet:18 },
+  { yr:2026, tuePeak:38, friQuiet:17 },
+];
+
+// ═══ COLOUR HELPERS ═══════════════════════════════════════
+
+function utilColour(u) {
+  if (u>=55) return {bg:'#0d2a1e',border:'#00c49a',text:'#00c49a'};
+  if (u>=40) return {bg:'#0a1a2e',border:'#4a9eff',text:'#4a9eff'};
+  if (u>=28) return {bg:'#1f1400',border:'#f5a623',text:'#f5a623'};
+  if (u>=18) return {bg:'#1f1000',border:'#f07830',text:'#f07830'};
+  return {bg:'#2a0a0a',border:'#e05c5c',text:'#e05c5c'};
 }
 
-function typeColor(t) {
-  const map = {
-    lounge:{ bg:'#1a2040', border:'#4a9eff', text:'#4a9eff' },
-    booth:{ bg:'#2a1a40', border:'#9a7aff', text:'#9a7aff' },
-    meeting:{ bg:'#1a2a28', border:'#40b09a', text:'#40b09a' },
-    desk84:{ bg:'#1a2a18', border:'#6ab860', text:'#6ab860' },
-    generic:{ bg:'#1e1a14', border:'#807060', text:'#807060' },
+function cleanColour(cost) {
+  if (cost==='HIGH') return {bg:'#0d2a1e',border:'#00c49a',text:'#00c49a'};
+  if (cost==='OK') return {bg:'#0a1a2e',border:'#4a9eff',text:'#4a9eff'};
+  if (cost==='WASTE') return {bg:'#2a0a0a',border:'#e05c5c',text:'#e05c5c'};
+  return {bg:'#1f1400',border:'#f5a623',text:'#f5a623'};
+}
+
+function typeColour(t) {
+  const m = {
+    lounge:{bg:'#1a0a2e',border:'#9a7aff',text:'#9a7aff'},
+    booth:{bg:'#0a1a2e',border:'#4a9eff',text:'#4a9eff'},
+    meeting:{bg:'#0a2018',border:'#00c49a',text:'#00c49a'},
+    desk84:{bg:'#0d2a1e',border:'#00c49a',text:'#00c49a'},
+    generic:{bg:'#141a20',border:'#5a7485',text:'#5a7485'},
   };
-  return map[t] || map.generic;
+  return m[t]||m.generic;
 }
 
-let layer = 'util';
-let currentBuilding = 'home';
-let activeBadgePopup = null;
-let expandedNotificationId = null;
-const tooltip = document.getElementById('tooltip');
+// ═══ STATE ════════════════════════════════════════════════
+let mapLayer = 'util';
+let weekLayer = 'all';
+const tt = document.getElementById('tt');
 
+<<<<<<< HEAD
 function switchBuilding(building, btn) {
   currentBuilding = building;
   document.querySelectorAll('.navbar-item').forEach(b => b.classList.remove('active'));
@@ -1062,131 +1256,131 @@ function buildNotifications() {
 }
 
 function buildFloorMap() {
+=======
+// ═══ FLOOR MAP ════════════════════════════════════════════
+function buildMap() {
+>>>>>>> origin/main
   const map = document.getElementById('floorMap');
-  map.innerHTML = '';
+  // Remove old zones but keep grid
+  map.querySelectorAll('.fzone').forEach(e=>e.remove());
 
   ZONES.forEach(z => {
-    const c = layer === 'util' ? utilColor(z.util) : typeColor(z.type);
-    const el = document.createElement('div');
-    el.className = 'zone';
-    el.style.cssText = `
-      left:${z.x}%; top:${z.y}%; width:${z.w}%; height:${z.h}%;
-      background:${c.bg}; border-color:${c.border}; color:${c.text};
-    `;
-    el.innerHTML = `
-      <div class="zone-pct">${z.util}%</div>
-      <div class="zone-name">${z.name}</div>
-    `;
+    let c;
+    if (mapLayer==='util') c = utilColour(z.util);
+    else if (mapLayer==='clean') c = cleanColour(z.cleanCost);
+    else c = typeColour(z.type);
 
-    el.addEventListener('mousemove', (e) => {
-      tooltip.innerHTML = `
-        <div class="tt-name">${z.name}</div>
-        <div class="tt-row"><span class="tt-label">Utilisation</span><span class="tt-val">${z.util}%</span></div>
-        <div class="tt-row"><span class="tt-label">Capacity</span><span class="tt-val">${z.cap} people</span></div>
-        <div class="tt-row"><span class="tt-label">Sensor battery</span><span class="tt-val">${z.sensor}%</span></div>
-        <div class="tt-row"><span class="tt-label">Zone type</span><span class="tt-val">${z.type}</span></div>
+    const el = document.createElement('div');
+    el.className = 'fzone';
+    el.style.cssText = `left:${z.x}%;top:${z.y}%;width:${z.w}%;height:${z.h}%;background:${c.bg};border-color:${c.border};color:${c.text}`;
+
+    const typeIcon = {lounge:'☕', booth:'🎧', meeting:'🤝', desk84:'⭐', generic:'💼'}[z.type] || '📍';
+    const zval = mapLayer==='clean' ? z.clean : mapLayer==='type' ? typeIcon : z.util+'%';
+    el.innerHTML = `<div class="zval">${zval}</div><div class="zname">${z.name}</div>`;
+
+    el.addEventListener('mousemove', e => {
+      tt.innerHTML = `
+        <div class="tt-title">${z.name}</div>
+        <div class="tt-row"><span class="tt-lbl">Utilisation</span><span class="tt-val">${z.util}%</span></div>
+        <div class="tt-row"><span class="tt-lbl">Capacity</span><span class="tt-val">${z.cap} people</span></div>
+        <div class="tt-row"><span class="tt-lbl">Sensor battery</span><span class="tt-val">${z.sensor}%</span></div>
+        <div class="tt-cleaning">Cleaning contract: ${z.clean} — ${z.cleanCost==='WASTE' ? '⚠ over-serviced vs utilisation' : z.cleanCost==='REVIEW' ? '↓ consider reducing' : '✓ appropriate'}</div>
       `;
-      tooltip.style.left = (e.clientX + 14) + 'px';
-      tooltip.style.top = (e.clientY - 10) + 'px';
-      tooltip.classList.add('show');
+      tt.style.left=(e.clientX+12)+'px'; tt.style.top=(e.clientY-10)+'px';
+      tt.classList.add('show');
     });
-    el.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+    el.addEventListener('mouseleave', ()=>tt.classList.remove('show'));
     map.appendChild(el);
   });
-
   buildLegend();
 }
 
 function buildLegend() {
   const leg = document.getElementById('mapLegend');
-  if (layer === 'util') {
-    leg.innerHTML = [
-      { c:'#ff6666', l:'Full/Crowded ≥60%' },
-      { c:'#ffa319', l:'Hot 50–59%' },
-      { c:'#ffdd33', l:'Warm 40–49%' },
-      { c:'#6ab8ff', l:'Moderate 25–39%' },
-      { c:'#00c49a', l:'Light 10–24%' },
-      { c:'#7aa831', l:'Empty <10%' },
-    ].map(i=>`<div class="leg-item"><div class="leg-swatch" style="background:${i.c}"></div>${i.l}</div>`).join('');
-  } else {
-    leg.innerHTML = [
-      { c:'#4a9eff', l:'Lounge' },
-      { c:'#9a7aff', l:'K-Booth' },
-      { c:'#40b09a', l:'Meeting' },
-      { c:'#6ab860', l:'84-Zone Desk' },
-      { c:'#807060', l:'Generic Desk' },
-    ].map(i=>`<div class="leg-item"><div class="leg-swatch" style="background:${i.c}"></div>${i.l}</div>`).join('');
-  }
+  let items;
+  if (mapLayer==='util') items = [{c:'#0d7a5a',l:'Hot ≥55%'},{c:'#1a52d4',l:'Active 40–54%'},{c:'#d97706',l:'Moderate 28–39%'},{c:'#ea7722',l:'Light 18–27%'},{c:'#c0392b',l:'Quiet <18%'}];
+  else if (mapLayer==='clean') items = [{c:'#0d7a5a',l:'High traffic · contract OK'},{c:'#1a52d4',l:'Active · contract OK'},{c:'#c0392b',l:'Over-serviced (WASTE)'},{c:'#d97706',l:'Review frequency'}];
+  else items = [{c:'#7c3aed',l:'Lounge'},{c:'#1a52d4',l:'K-Booth'},{c:'#16a34a',l:'Meeting'},{c:'#0d7a5a',l:'84-Zone Desk'},{c:'#9a9590',l:'Generic Desk'}];
+  leg.innerHTML = items.map(i=>`<div class="leg"><div class="leg-sq" style="background:${i.c}20;border-color:${i.c}"></div>${i.l}</div>`).join('');
 }
 
 function setLayer(l, btn) {
-  layer = l;
-  document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('on'));
+  mapLayer = l;
+  document.querySelectorAll('.lbtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  buildFloorMap();
+  buildMap();
 }
 
-function buildDayRow() {
-  const row = document.getElementById('dayRow');
-  row.innerHTML = '';
-  DAY_DATA.forEach((d, i) => {
-    const isToday = i === todayIdx;
+// ═══ DAY STRIP ════════════════════════════════════════════
+function buildDayStrip() {
+  const strip = document.getElementById('dayStrip');
+  if (!strip) return;
+  strip.innerHTML = '';
+  // Check if today is a Finnish holiday week
+  const mo = new Date().getMonth()+1;
+  const isHolMonth = HOLIDAYS.some(h=>h.month===mo);
+
+  DAYS_DATA.forEach((d,i) => {
+    const isToday = i===todayIdx;
     const el = document.createElement('div');
-    el.className = 'day-cell' + (isToday ? ' today' : '') + (d.peak ? ' peak' : '');
+    el.className = 'day-cell'+(isToday?' today':'')+(d.peak?' peak':'');
+    const col = d.peak ? 'var(--amber)' : isToday ? 'var(--blue)' : 'var(--ink)';
     el.innerHTML = `
-      <div class="day-label">${d.label.toUpperCase()}</div>
-      <div class="day-pct" style="color:${d.peak ? 'var(--amber)' : isToday ? 'var(--teal)' : 'var(--text)'}">${d.rooms}%</div>
-      <div class="day-bar"><div class="day-fill" style="width:${d.rooms*2}%;background:${d.peak ? 'var(--amber)' : 'var(--teal)'}"></div></div>
-      ${d.peak ? '<div class="day-tag" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber)">PEAK</div>' : ''}
-      ${isToday && !d.peak ? '<div class="day-tag" style="background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal)">TODAY</div>' : ''}
+      <div class="day-lbl">${d.lbl.toUpperCase()}</div>
+      <div class="day-pct" style="color:${col}">${d.rooms}%</div>
+      <div class="day-bar"><div class="day-fill" style="width:${d.rooms*2.2}%;background:${col}"></div></div>
+      ${d.peak?'<div class="day-tag peak">PEAK</div>':''}
+      ${isToday&&!d.peak?'<div class="day-tag today">TODAY</div>':''}
+      ${isHolMonth&&isToday?'<div class="day-tag hol">HOL?</div>':''}
     `;
-    row.appendChild(el);
+    strip.appendChild(el);
   });
 }
 
+// ═══ NUDGE ════════════════════════════════════════════════
 function buildNudge() {
-  const td = DAY_DATA[todayIdx];
-  const dayName = ['Monday','Tuesday','Wednesday','Thursday','Friday'][todayIdx];
-  const isPeak = td.peak;
-  const people = Math.round((td.rooms / 100) * 197 + (td.desks / 100) * 241);
+  const d = DAYS_DATA[todayIdx];
+  const dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+  const dn = dayNames[todayIdx];
+  const ppl = Math.round((d.rooms/100)*197+(d.desks/100)*241);
+  const isPeak = d.peak;
+  const mo = new Date().getMonth()+1;
+  const hol = HOLIDAYS.find(h=>h.month===mo);
 
-  document.getElementById('nudgeText').innerHTML = isPeak
-    ? `<strong>Today is ${dayName} — PEAK DAY.</strong> Forecast: <strong>~${td.rooms}% rooms</strong> / <strong>~${td.desks}% desks</strong>. Hot zones filling fast — arrive before 9 AM or after 2 PM for best availability.`
-    : `Today is ${dayName}. Forecast: <strong>~${td.rooms}% rooms</strong> / <strong>~${td.desks}% desks</strong>. Comfortable day — good availability across all zones.`;
+  document.getElementById('nudgeMsg').innerHTML = isPeak
+    ? `<strong>Today is ${dn} — peak day.</strong> Forecast: <strong>~${d.rooms}% rooms</strong> / <strong>~${d.desks}% desks</strong>. Hot zones fill fast — arrive before 09:00 or after 14:00.
+      <!-- <div><em>SLA risk HIGH on peak days — FM team pre-positioned.</em></div> -->
+      `
+    : `Today is ${dn}. Forecast: <strong>~${d.rooms}% rooms</strong> / <strong>~${d.desks}% desks</strong>. Comfortable availability.${hol?` <em>Note: ${hol.name} month — ${hol.effect}.</em>`:''}`;
 
-  const tags = document.getElementById('nudgeTags');
-  tags.innerHTML = '';
-  [
-    { t:`~${people} people expected`, cls:'' },
-    { t:'Hot: Coffee Lounge · K11–K14', cls:'' },
-    { t:'Quiet: Räme · K8 · Generic desks', cls:'amber' },
-    isPeak ? { t:'⚡ Peak day — arrive early', cls:'amber' } : null,
-  ].filter(Boolean).forEach(tag => {
-    const span = document.createElement('span');
-    span.className = 'nudge-tag ' + tag.cls;
-    span.textContent = tag.t;
-    tags.appendChild(span);
-  });
+  const pills = [
+    {t:`~${ppl} people expected`,c:'g'},
+    {t:'Hot: Coffee Lounge · K11–K14 · 84-Zone A/B',c:'g'},
+ //   {t:'Quiet: Räme · K8 · Generic desks 1–80',c:'a'},
+    isPeak?{t:'⚡ SLA risk elevated — FM pre-alert sent',c:'r'}:null,
+//    hol?{t:`🇫🇮 ${hol.name} — demand adjusted`,c:'a'}:null,
+  ].filter(Boolean);
+
+  document.getElementById('nudgePills').innerHTML = pills.map(p=>`<span class="npill ${p.c}">${p.t}</span>`).join('');
+  const fmMsg = ''
+
+//  const fmMsg = isPeak
+//    ? `⚡ PEAK DAY — deploy full cleaning team · order ${ppl} covers · all HVAC zones active`
+//    : `LOW DAY — reduce cleaning to floors 1+3 · order ${Math.round(ppl*0.8)} covers · HVAC zones 2+4 offline`;
+  document.getElementById('fmQuickMsg').textContent = fmMsg;
 }
 
-function getUtilColor(val) {
-  if (val >= 40) return { bar:'#ff6666', text:'#ff6666', name:'Hot' };
-  if (val >= 32) return { bar:'#ffa319', text:'#ffa319', name:'Warm' };
-  if (val >= 24) return { bar:'#ffdd33', text:'#ffdd33', name:'Moderate' };
-  if (val >= 16) return { bar:'#6ab8ff', text:'#6ab8ff', name:'Light' };
-  return { bar:'#00c49a', text:'#00c49a', name:'Quiet' };
-}
-
+// ═══ WEEK CHART ═══════════════════════════════════════════
 function buildBarChart() {
   const chart = document.getElementById('barChart');
   if (!chart) return;
   chart.innerHTML = '';
-  const maxVal = 45;
+  const maxV = 70;
 
-  DAY_DATA.forEach((d, i) => {
-    const isPeak = d.peak;
-    const isToday = i === todayIdx;
+  DAYS_DATA.forEach((d,i) => {
+    const isToday = i===todayIdx;
     const grp = document.createElement('div');
+<<<<<<< HEAD
     grp.className = 'bar-group' + (isPeak ? ' bar-day-peak' : '');
 
     const rh = (d.rooms / maxVal * 140);
@@ -1195,18 +1389,37 @@ function buildBarChart() {
     const roomsColor = getUtilColor(d.rooms);
     const desksColor = getUtilColor(d.desks);
 
+=======
+    grp.className = 'bgrp'+(d.peak?' bgrp-peak':'');
+    let barsHTML = '';
+    if (weekLayer==='all'||weekLayer==='occ') {
+      const rh = d.rooms/maxV*140; const dh = d.desks/maxV*140;
+      barsHTML += `<div class="bar rooms" data-t="Rooms: ${d.rooms}%" style="height:${rh}px"></div>`;
+      barsHTML += `<div class="bar desks" data-t="Desks: ${d.desks}%" style="height:${dh}px"></div>`;
+    }
+    if (weekLayer==='all'||weekLayer==='sla') {
+      const sh = d.sla/maxV*140;
+      barsHTML += `<div class="bar sla" data-t="SLA violations: ${d.sla}%" style="height:${sh}px"></div>`;
+    }
+>>>>>>> origin/main
     grp.innerHTML = `
-      <div class="bar-wrap">
-        <div class="bar rooms" data-tip="Rooms: ${d.rooms}% · ${roomsColor.name}" style="height:${rh}px;background:${roomsColor.bar} !important;"></div>
-        <div class="bar desks" data-tip="Desks: ${d.desks}% · ${desksColor.name}" style="height:${dh}px;background:${desksColor.bar} !important;"></div>
-      </div>
-      <div class="bar-label" style="${isToday ? 'color:var(--teal)' : ''}">${d.label}${isPeak ? '★' : ''}</div>
-      ${isPeak ? '<span class="peak-marker">PEAK</span>' : ''}
+      <div class="bwrap">${barsHTML}</div>
+      <div class="blbl${d.peak?' peak':''}"${isToday?` style="color:var(--blue)"`:''}>${d.lbl}</div>
+      ${d.peak?'<div class="bpeak-tag">PEAK</div>':''}
     `;
     chart.appendChild(grp);
   });
+
+  const legend = document.getElementById('chartLegend');
+  if (legend) {
+    const items = [];
+    if (weekLayer!=='sla') { items.push({c:'var(--blue)',l:'Meeting rooms'}); items.push({c:'#93c5fd',l:'Desks'}); }
+    if (weekLayer!=='occ') items.push({c:'var(--red)',l:'SLA violations %'});
+    legend.innerHTML = `<div class="chart-legend">${items.map(i=>`<div class="cl"><div class="cls" style="background:${i.c}"></div>${i.l}</div>`).join('')}</div>`;
+  }
 }
 
+<<<<<<< HEAD
 function buildTopZones() {
   const container = document.getElementById('topZonesContainer');
   if (!container) return;
@@ -1215,98 +1428,503 @@ function buildTopZones() {
 
   container.innerHTML = topZones.map((z, idx) => {
     const color = utilColor(z.util);
+=======
+function setWeekLayer(l,btn) {
+  weekLayer=l;
+  document.querySelectorAll('#tab-week .lbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  buildBarChart();
+}
+
+// ═══ HOLIDAYS ════════════════════════════════════════════
+function buildHolidays() {
+  const el = document.getElementById('holidayList');
+  if (!el) return;
+  el.innerHTML = HOLIDAYS.map(h=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-size:12px;font-weight:500">${h.name}</div>
+        <div style="font-family:var(--mono);font-size:9.5px;color:var(--muted);margin-top:1px">${h.date}</div>
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--amber);background:var(--amber-dim);border:1px solid var(--amber);padding:2px 7px;border-radius:2px">${h.effect}</div>
+    </div>
+  `).join('');
+}
+
+function buildYearConsistency() {
+  const el = document.getElementById('yearConsistency');
+  if (!el) return;
+  el.innerHTML = YEARS.map(y=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">${y.yr}</span>
+      <span>Tue peak: <strong style="color:var(--amber)">${y.tuePeak}%</strong></span>
+      <span>Fri quiet: <strong style="color:var(--green)">${y.friQuiet||y.friFri}%</strong></span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--green)">✓ CONSISTENT</span>
+    </div>
+  `).join('');
+}
+
+// ═══ ZONE COMPARE ═════════════════════════════════════════
+function buildZoneCompare() {
+  const el = document.getElementById('zoneCompare');
+  if (!el) return;
+  const sorted = [...ZONES].sort((a,b)=>b.util-a.util);
+  el.innerHTML = sorted.map(z => {
+    const wasteFlag = z.cleanCost==='WASTE' ? ' <span style="color:var(--red);font-size:9px;font-family:var(--mono)">⚠ OVER-SERVICED</span>' : '';
+    const col = z.util>=50?'var(--green)':z.util>=35?'var(--blue)':z.util>=20?'var(--amber)':'var(--red)';
+>>>>>>> origin/main
     return `
-      <div class="stat-box" style="margin-bottom:8px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <div style="font-size:12px; font-weight:600; margin-bottom:2px; color:${color.text}">🏆 #${idx+1} ${z.name}</div>
-            <div style="font-size:11px; color:var(--muted); font-family:var(--mono);">${z.type}</div>
+      <div class="cbar-row">
+        <div class="cbar-lbl">${z.name}<br><span style="color:var(--muted)">${z.clean}</span>${wasteFlag}</div>
+        <div class="cbar-track">
+          <div class="cbar-fill" style="width:${z.util}%;background:${col}">
+            <span style="color:#ffffff">${z.util}%</span>
           </div>
-          <div style="font-size:20px; font-weight:800; color:${color.text};">${z.util}%</div>
         </div>
+        <div class="cbar-val" style="color:${col}">${z.util}%</div>
       </div>
     `;
   }).join('');
 }
 
-function buildCompare() {
-  const container = document.getElementById('compareBar');
-  if (!container) return;
+function buildCleanMismatch() {
+  const el = document.getElementById('cleanMismatch');
+  if (!el) return;
+  const waste = ZONES.filter(z=>z.cleanCost==='WASTE');
+  const review = ZONES.filter(z=>z.cleanCost==='REVIEW');
+  el.innerHTML = `
+    <div style="margin-bottom:12px">
+      <div style="font-family:var(--mono);font-size:9px;color:var(--red);letter-spacing:0.1em;margin-bottom:6px">OVER-SERVICED (HIGH CLEAN, LOW USE)</div>
+      ${waste.map(z=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
+          <span>${z.name}</span>
+          <span style="display:flex;gap:8px;align-items:center">
+            <span style="font-family:var(--mono);font-size:10px;color:var(--red)">${z.clean}</span>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--muted)">${z.util}% util</span>
+            <span style="font-family:var(--mono);font-size:9px;color:var(--red);border:1px solid var(--red);padding:1px 5px;border-radius:1px">REVIEW</span>
+          </span>
+        </div>`).join('')}
+    </div>
+    <div>
+      <div style="font-family:var(--mono);font-size:9px;color:var(--amber);letter-spacing:0.1em;margin-bottom:6px">CONSIDER REDUCING</div>
+      ${review.map(z=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
+          <span>${z.name}</span>
+          <span style="font-family:var(--mono);font-size:10px;color:var(--amber)">${z.clean} · ${z.util}% util</span>
+        </div>`).join('')}
+    </div>
+  `;
+}
 
-  const zones = [
-    { label:'Coffee Lounge', val:62, color:'var(--teal)' },
-    { label:'K11–K14 Booths', val:55, color:'var(--teal)' },
-    { label:'84-Zone A', val:53, color:'#6ab860' },
-    { label:'84-Zone B', val:50, color:'#6ab860' },
-    { label:'Named Meetings', val:39, color:'var(--blue)' },
-    { label:'Generic Desk 1–40', val:25, color:'var(--amber)' },
-    { label:'Generic Desk 41–80', val:24, color:'var(--amber)' },
-    { label:'Räme', val:18, color:'var(--red)' },
-    { label:'K8', val:22, color:'var(--red)' },
-  ];
+// ═══ FM ══════════════════════════════════════════════════
+function buildFM() {
+  const d = DAYS_DATA[todayIdx];
+  const ppl = Math.round((d.rooms/100)*197+(d.desks/100)*241);
+  const dn = ['Monday','Tuesday','Wednesday','Thursday','Friday'][todayIdx];
+  const isPeak = d.peak;
 
-  container.innerHTML = zones.map(z => `
-    <div class="cb-row">
-      <div class="cb-label">${z.label}</div>
-      <div class="cb-track">
-        <div class="cb-fill" style="width:${z.val}%;background:${z.color}">
-          <span>${z.val}%</span>
+  const el = id=>document.getElementById(id);
+  if(el('fmDayLabel')) el('fmDayLabel').textContent = dn;
+  if(el('fmPeopleLabel')) el('fmPeopleLabel').textContent = '~'+ppl+' people';
+  if(el('fmRoomsPct')) el('fmRoomsPct').textContent = d.rooms+'%';
+  if(el('fmDesksPct')) el('fmDesksPct').textContent = d.desks+'%';
+  if(el('cleanDetail')) el('cleanDetail').textContent = isPeak ? 'Full run · all zones · all floors' : 'Reduced · floors 1+3 only · save ~€40';
+  if(el('caterDetail')) el('caterDetail').textContent = isPeak ? `${ppl} covers ordered · full catering` : `${Math.round(ppl*0.8)} covers · 20% reduction`;
+  if(el('hvacDetail')) el('hvacDetail').textContent = isPeak ? 'All zones active · full occupancy' : 'Zones 2+4 offline · save ~€25/day';
+  if(el('hvacBadge')) { el('hvacBadge').textContent = isPeak ? 'FULL ON' : 'ADJUSTED'; el('hvacBadge').className = 'fm-badge '+(isPeak?'fix':'opt'); }
+
+  const sla = d.sla;
+  if(el('slaBadge')) { el('slaBadge').textContent = sla>=60 ? 'HIGH RISK' : sla>=50 ? 'ELEVATED' : 'NORMAL'; el('slaBadge').className = 'fm-badge '+(sla>=60?'alert':sla>=50?'fix':'opt'); }
+  if(el('slaDetail')) { el('slaDetail').textContent = `${sla}% violation rate today · ${sla>=60?'pre-position staff':'standard response'}`; el('slaDetail').style.color = sla>=60?'var(--red)':'var(--green)'; }
+
+  // SLA grid
+  const sg = document.getElementById('slaGrid');
+  if(sg) sg.innerHTML = DAYS_DATA.map((d2,i)=>{
+    const cls = d2.sla>=60?'sla-pct high':d2.sla>=50?'sla-pct mid':'sla-pct low';
+    return `<div class="sla-day${d2.peak?' peak':''}${i===todayIdx?' today':''}">
+      <div class="sla-lbl">${d2.lbl.toUpperCase()}</div>
+      <div class="${cls}">${d2.sla}%</div>
+      <div class="sla-note">violations</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══ CROSS-BUILDING ═══════════════════════════════════════
+function buildCrossBuilding() {
+  const grid = document.getElementById('bldgGrid');
+  if (!grid) return;
+  grid.innerHTML = BUILDINGS.map(b=>{
+    const pct = b.peak;
+    const qpct = b.quiet;
+    return `
+      <div class="bldg-card${b.active?' active-bldg':''}">
+        ${b.active?'<div class="bldg-verified">✓ PRIMARY</div>':'<div class="bldg-verified" style="color:var(--blue)">✓ VALIDATED</div>'}
+        <div class="bldg-name">${b.name}</div>
+        <div class="bldg-loc">${b.loc}</div>
+        <div class="bldg-bars">
+          ${['Mon','Tue','Wed','Thu','Fri'].map((day,i)=>{
+            const vals = [Math.round(pct*0.74), pct, Math.round(pct*0.84), Math.round(pct*0.63), qpct];
+            const v = vals[i];
+            const isP = i===1; const isQ = i===4;
+            return `<div class="mini-bar-row">
+              <span style="${isP?'color:var(--amber);font-weight:600':isQ?'color:var(--green)':''}">${day}</span>
+              <div class="mini-track"><div class="mini-fill" style="width:${v/50*100}%;background:${isP?'var(--amber)':isQ?'var(--green)':'var(--blue)'}"></div></div>
+              <span style="font-family:var(--mono);font-size:8px;color:var(--muted);width:24px">${v}%</span>
+            </div>`;
+          }).join('')}
+        </div>
+        <div style="margin-top:8px;font-family:var(--mono);font-size:9px;color:var(--muted)">
+          ${b.rooms} rooms · ${b.desks} desks
         </div>
       </div>
-      <div class="cb-val" style="color:${z.color}">${z.val}%</div>
+    `;
+  }).join('');
+
+  // Peak agreement
+  const pa = document.getElementById('peakAgreement');
+  if(pa) pa.innerHTML = BUILDINGS.map(b=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
+      <span style="font-weight:500">${b.name}</span>
+      <span style="display:flex;align-items:center;gap:6px">
+        <span style="font-family:var(--mono);font-size:11px;color:var(--amber)">${b.peakDay} · ${b.peak}%</span>
+        <span style="color:var(--green);font-size:11px">✓</span>
+      </span>
+    </div>`).join('');
+
+  const qa = document.getElementById('quietAgreement');
+  if(qa) qa.innerHTML = BUILDINGS.map(b=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
+      <span style="font-weight:500">${b.name}</span>
+      <span style="display:flex;align-items:center;gap:6px">
+        <span style="font-family:var(--mono);font-size:11px;color:var(--green)">${b.quietDay} · ${b.quiet}%</span>
+        <span style="color:var(--green);font-size:11px">✓</span>
+      </span>
+    </div>`).join('');
+
+  const re = document.getElementById('rolloutEst');
+  if(re) re.innerHTML = `
+    <div style="font-size:13px;line-height:1.8;color:var(--ink2)">
+      <div style="margin-bottom:8px">
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted)">Per building</span><br>
+        <strong>4 weeks</strong> calibration data required
+      </div>
+      <div style="margin-bottom:8px">
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted)">NovaProp 3 buildings</span><br>
+        <strong>Ready now</strong> — data already in dataset
+      </div>
+      <div>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted)">Marginal cost</span><br>
+        <strong style="color:var(--green)">~€0</strong> per additional building
+      </div>
+    </div>
+  `;
+}
+
+// ═══ COST IMPACT ══════════════════════════════════════════
+function buildCostImpact() {
+  const cb = document.getElementById('costBreakdown');
+  if(!cb) return;
+  const items = [
+    { val:'€8,400', lbl:'Cleaning over-service', how:'2 generic desk zones cleaned 5×/wk despite <25% utilisation. Reducing to 3×/wk on Tue–Fri saves ~467 visits/yr at €18/clean.', pct:37 },
+    { val:'€9,600', lbl:'HVAC on low-occupancy days', how:'~115 low-occupancy days/yr (Fridays, July, Dec). Switching off 2 of 4 HVAC zones on these days saves ~€83/day.', pct:43 },
+    { val:'€4,400', lbl:'SLA-driven reactive costs', how:'Current 53.8% SLA violation rate generates reactive callouts. Demand-aware pre-positioning on Tuesdays reduces violations ~15%.', pct:20 },
+  ];
+  cb.innerHTML = items.map(it=>`
+    <div class="cost-item">
+      <div class="cost-item-val">${it.val}</div>
+      <div class="cost-item-lbl">${it.lbl} · ${it.pct}% of total</div>
+      <div class="cost-item-how">${it.how}</div>
+      <div class="cost-bar"><div class="cost-bar-fill" style="width:${it.pct}%"></div></div>
     </div>
   `).join('');
+
+  const cd = document.getElementById('cleaningDetail');
+  if(cd) cd.innerHTML = `
+    <div style="font-size:12px;line-height:1.7;color:var(--ink2)">
+      <p>From <code style="font-family:var(--mono);font-size:11px;background:var(--surface2);padding:1px 4px">Liite_4B_Cleaning_Lentokentänkatu.xlsx</code>:</p>
+      <br>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+        ${[
+          {zone:'Generic desks 1–40',freq:'5×/wk',util:'25%',verdict:'OVER-SERVICED'},
+          {zone:'Generic desks 41–80',freq:'5×/wk',util:'24%',verdict:'OVER-SERVICED'},
+          {zone:'Coffee Lounge',freq:'5×/wk',util:'62%',verdict:'APPROPRIATE'},
+          {zone:'84-Zone A + B',freq:'5×/wk',util:'52%',verdict:'APPROPRIATE'},
+          {zone:'Räme',freq:'2×/wk',util:'18%',verdict:'REVIEW'},
+          {zone:'K8',freq:'2×/wk',util:'22%',verdict:'REVIEW'},
+        ].map(r=>`
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:8px">
+            <div style="font-weight:500;font-size:11px">${r.zone}</div>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--muted)">Contract: ${r.freq} · Actual use: ${r.util}</div>
+            <div style="font-family:var(--mono);font-size:9px;margin-top:4px;color:${r.verdict==='OVER-SERVICED'?'var(--red)':r.verdict==='REVIEW'?'var(--amber)':'var(--green)'};border:1px solid currentColor;padding:1px 5px;border-radius:1px;display:inline-block">${r.verdict}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  const pp = document.getElementById('portfolioProj');
+  if(pp) pp.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${[
+        {bldg:'Valmet (this building)',save:'€22,400',status:'READY'},
+        {bldg:'NovaProp Aurora',save:'€18,200',status:'4 WKS'},
+        {bldg:'NovaProp Horizon',save:'€21,000',status:'4 WKS'},
+        {bldg:'NovaProp Meridian',save:'€19,800',status:'4 WKS'},
+      ].map(r=>`
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px;background:var(--surface2);border:1px solid var(--border);border-radius:3px">
+          <div style="font-size:11px;font-weight:500">${r.bldg}</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-family:var(--mono);font-size:12px;color:var(--green)">${r.save}</span>
+            <span style="font-family:var(--mono);font-size:9px;color:${r.status==='READY'?'var(--green)':'var(--blue)'};border:1px solid currentColor;padding:1px 5px;border-radius:1px">${r.status}</span>
+          </div>
+        </div>
+      `).join('')}
+      <div style="background:#050c14;color:var(--ink);padding:10px;border-radius:3px;text-align:center;border:1px solid var(--border)">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-bottom:4px">PORTFOLIO TOTAL · 4 BUILDINGS</div>
+        <div style="font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:-1px">€81,400</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:2px">annual · conservative estimate</div>
+      </div>
+    </div>
+  `;
 }
 
-function buildFM() {
-  const td = DAY_DATA[todayIdx];
-  const dayName = ['Monday','Tuesday','Wednesday','Thursday','Friday'][todayIdx];
-  const people = Math.round((td.rooms / 100) * 197 + (td.desks / 100) * 241);
-
-  document.getElementById('fmDay').textContent = dayName;
-  document.getElementById('fmPeople').textContent = people;
-  document.getElementById('fmRooms').textContent = td.rooms + '%';
-  document.getElementById('fmDesks').textContent = td.desks + '%';
-
-  const isHighDay = td.rooms >= 35;
-  document.getElementById('cleanSaving').textContent = isHighDay ? 'Full run · all floors' : '↓ Reduced · floors 1+3 only';
-  document.getElementById('caterSaving').textContent = isHighDay ? `${people} covers ordered` : `${Math.round(people*0.8)} covers · 20% reduction`;
-  document.getElementById('hvacSaving').textContent = isHighDay ? 'All zones active' : '3 zones offline · save ~15%';
-}
-
+// ═══ TABS ═════════════════════════════════════════════════
 function switchTab(id, btn) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + id).classList.add('active');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
-
-  if (id === 'weekview') { buildBarChart(); buildTopZones(); }
-  if (id === 'zones') buildCompare();
-  if (id === 'fm') buildFM();
+  if (id==='week') { buildBarChart(); buildHolidays(); buildYearConsistency(); }
+  if (id==='zones') { buildZoneCompare(); buildCleanMismatch(); }
+  if (id==='fm') buildFM();
+  if (id==='xbldg') buildCrossBuilding();
+  if (id==='cost') buildCostImpact();
 }
 
+// ═══ CLOCK ════════════════════════════════════════════════
 function updateClock() {
-  const now = new Date();
   document.getElementById('clock').textContent =
-    now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}) + ' · ' +
-    now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}) + ' · ' +
+    new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
 }
 
-buildFloorMap();
-buildDayRow();
-buildNotifications();
+// ═══ INIT ═════════════════════════════════════════════════
+buildMap();
+buildDayStrip();
 buildNudge();
-buildFM();
-buildTopZones();
 updateClock();
 setInterval(updateClock, 30000);
 
+// ═══════════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════════════════════════
+
+const NOTIF_CATEGORIES = [
+  {
+    id: 'battery',
+    icon: '🔋',
+    iconBg: '#2a0a0a',
+    label: 'Sensor Battery',
+    countColor: 'red',
+    items: [
+      { id:'bat1', title:'2.krs Neukkari — Battery Critical', detail:'Battery at 2% · Last communication Feb 2026 · Sensor completely offline. Data gap of 14 days detected. Replacement required immediately.', time:'2 hours ago', severity:'critical', sevLabel:'CRITICAL', action:'ORDER BATTERY', read:false },
+      { id:'bat2', title:'Coffee Lounge Sensor — Low Battery', detail:'Battery at 11% · Estimated 4–6 days remaining · Last sync successful. Schedule replacement during next FM visit.', time:'1 day ago', severity:'warning', sevLabel:'LOW', action:'SCHEDULE', read:false },
+      { id:'bat3', title:'84-Zone A — Node 3 Degraded', detail:'Battery at 18% · Intermittent connectivity · 3 missed heartbeats in last 24h. Monitor closely.', time:'2 days ago', severity:'warning', sevLabel:'WATCH', action:'MONITOR', read:true },
+      { id:'bat4', title:'K11 Booth Sensor — Replaced', detail:'New battery installed · Battery at 100% · All systems nominal. Next scheduled check in 6 months.', time:'5 days ago', severity:'info', sevLabel:'RESOLVED', action:'VIEW LOG', read:true },
+    ],
+  },
+  {
+    id: 'anomaly',
+    icon: '📊',
+    iconBg: '#1f1400',
+    label: 'Usage Anomaly',
+    countColor: 'amber',
+    items: [
+      { id:'anom1', title:'Räme — Occupancy Spike Detected', detail:'Zone at 68% — 3.8× above 18% baseline. Possible unregistered event booking. No cleaning pre-alert sent. FM team notified.', time:'47 min ago', severity:'warning', sevLabel:'ANOMALY', action:'INVESTIGATE', read:false },
+      { id:'anom2', title:'Generic Desks 41–80 — Unusual Evening Use', detail:'Zone occupied at 21:40 on a Friday — 6× above Friday baseline. Security notified. Badge access log requested.', time:'3 days ago', severity:'warning', sevLabel:'ANOMALY', action:'VIEW ACCESS', read:true },
+      { id:'anom3', title:'84-Zone B — Monday Peak Outlier', detail:'Monday utilisation hit 71% — highest ever recorded for a Monday. Correlated with offsite cancellation. No action needed.', time:'1 week ago', severity:'info', sevLabel:'NOTED', action:'VIEW TREND', read:true },
+    ],
+  },
+  {
+    id: 'hvac',
+    icon: '❄️',
+    iconBg: '#0a1525',
+    label: 'HVAC Maintenance',
+    countColor: 'amber',
+    items: [
+      { id:'hvac1', title:'Mod10 HVAC Unit — Service Overdue', detail:'Scheduled maintenance overdue by 12 days · Filter replacement required · Airflow efficiency down 14% vs baseline. Book FM contractor.', time:'3 days ago', severity:'warning', sevLabel:'OVERDUE', action:'BOOK SERVICE', read:false },
+      { id:'hvac2', title:'Zone A Air Handling — Filter Warning', detail:'Filter load at 87% capacity · Estimated 9 days to critical · CO₂ levels slightly elevated at 820 ppm during peak. Schedule within 1 week.', time:'5 days ago', severity:'warning', sevLabel:'SCHEDULE', action:'SCHEDULE', read:false },
+      { id:'hvac3', title:'Coffee Lounge HVAC — Noise Report', detail:'Staff reported unusual noise from ceiling unit at 10:15. Maintenance inspection completed — loose panel fastener tightened. No further action needed.', time:'1 week ago', severity:'info', sevLabel:'RESOLVED', action:'VIEW REPORT', read:true },
+      { id:'hvac4', title:'Building-Wide — Annual HVAC Audit Due', detail:'Annual inspection window opens in 3 weeks. All 6 HVAC zones must be inspected. Coordinator to confirm contractor availability.', time:'1 week ago', severity:'info', sevLabel:'UPCOMING', action:'PLAN AUDIT', read:true },
+    ],
+  },
+];
+
+let notifOpen = false;
+let notifView = 'categories'; // 'categories' | category id
+let notifItems = {};
+
+// Flatten all items into a lookup map
+NOTIF_CATEGORIES.forEach(cat => {
+  cat.items.forEach(item => { notifItems[item.id] = item; });
+});
+
+function totalUnread() {
+  return NOTIF_CATEGORIES.reduce((sum, cat) => sum + cat.items.filter(i => !i.read).length, 0);
+}
+
+function catUnread(cat) {
+  return cat.items.filter(i => !i.read).length;
+}
+
+function updateBadge() {
+  const unread = totalUnread();
+  const badge = document.getElementById('notifBadge');
+  if (unread === 0) { badge.style.display = 'none'; }
+  else { badge.style.display = 'flex'; badge.textContent = unread; }
+}
+
+// ── CATEGORY LIST VIEW ──────────────────────────────────────
+function renderCategories() {
+  const panel = document.getElementById('notifPanel');
+  const unread = totalUnread();
+  const sevClass = { critical:'sev-critical', warning:'sev-warning', info:'sev-info' };
+
+  panel.innerHTML = `
+    <div class="notif-header">
+      <div>
+        <div class="notif-header-title">Notifications</div>
+        <div class="notif-header-meta">${unread} UNREAD · VALMET MOD30</div>
+      </div>
+      ${unread > 0 ? `<button class="notif-clear" onclick="markAllRead()">MARK ALL READ</button>` : ''}
+    </div>
+    ${NOTIF_CATEGORIES.map(cat => {
+      const u = catUnread(cat);
+      const latest = cat.items.find(i => !i.read) || cat.items[0];
+      return `
+        <div class="notif-cat-item" onclick="openCategory('${cat.id}')">
+          <div class="notif-cat-icon" style="background:${cat.iconBg}">${cat.icon}</div>
+          <div class="notif-cat-body">
+            <div class="notif-cat-title">${cat.label}</div>
+            <div class="notif-cat-meta">${cat.items.length} alerts · ${latest.title}</div>
+          </div>
+          <div class="notif-cat-right">
+            <span class="notif-cat-count ${cat.countColor}">${u > 0 ? u+' new' : 'all read'}</span>
+            <span class="notif-cat-chevron">›</span>
+          </div>
+        </div>
+      `;
+    }).join('')}
+    <div class="notif-footer"><a href="#">VIEW ALL ALERTS →</a></div>
+  `;
+}
+
+// ── DRILL-DOWN VIEW ─────────────────────────────────────────
+function renderCategory(catId) {
+  const panel = document.getElementById('notifPanel');
+  const cat = NOTIF_CATEGORIES.find(c => c.id === catId);
+  const sevClass = { critical:'sev-critical', warning:'sev-warning', info:'sev-info' };
+  const u = catUnread(cat);
+
+  panel.innerHTML = `
+    <div class="notif-back" onclick="backToCategories()">
+      <span class="notif-back-arrow">‹</span>
+      <span class="notif-back-label">ALL CATEGORIES</span>
+    </div>
+    <div class="notif-header" style="border-top:none">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="notif-cat-icon" style="background:${cat.iconBg};width:28px;height:28px;border-radius:6px;font-size:14px">${cat.icon}</div>
+        <div>
+          <div class="notif-header-title">${cat.label}</div>
+          <div class="notif-header-meta">${u} UNREAD · ${cat.items.length} TOTAL</div>
+        </div>
+      </div>
+      ${u > 0 ? `<button class="notif-clear" onclick="markCatRead('${catId}')">MARK READ</button>` : ''}
+    </div>
+    ${cat.items.map(item => `
+      <div class="notif-drill-item ${item.read ? 'read' : 'unread'}" onclick="markItemRead('${item.id}','${catId}')">
+        <div class="notif-drill-header">
+          <div class="notif-drill-title">${item.title}</div>
+          <div class="notif-severity ${sevClass[item.severity]}">${item.sevLabel}</div>
+        </div>
+        <div class="notif-drill-detail">${item.detail}</div>
+        <div class="notif-drill-footer">
+          <span class="notif-drill-time">${item.time}</span>
+          <span class="notif-drill-action">${item.action} →</span>
+        </div>
+      </div>
+    `).join('')}
+    <div class="notif-footer"><a href="#">EXPORT ${cat.label.toUpperCase()} LOG →</a></div>
+  `;
+}
+
+function openCategory(catId) {
+  notifView = catId;
+  renderCategory(catId);
+}
+
+function backToCategories() {
+  notifView = 'categories';
+  renderCategories();
+}
+
+function markItemRead(itemId, catId) {
+  notifItems[itemId].read = true;
+  NOTIF_CATEGORIES.forEach(cat => {
+    cat.items.forEach(item => { if (item.id === itemId) item.read = true; });
+  });
+  updateBadge();
+  renderCategory(catId);
+}
+
+function markCatRead(catId) {
+  const cat = NOTIF_CATEGORIES.find(c => c.id === catId);
+  cat.items.forEach(item => { item.read = true; notifItems[item.id].read = true; });
+  updateBadge();
+  renderCategory(catId);
+}
+
+function markAllRead() {
+  NOTIF_CATEGORIES.forEach(cat => cat.items.forEach(item => { item.read = true; notifItems[item.id].read = true; }));
+  updateBadge();
+  renderCategories();
+}
+
+function renderNotifPanel() {
+  if (notifView === 'categories') renderCategories();
+  else renderCategory(notifView);
+}
+
+function toggleNotif(e) {
+  e.stopPropagation();
+  const panel = document.getElementById('notifPanel');
+  if (notifOpen) {
+    closeNotif();
+  } else {
+    notifView = 'categories';
+    renderNotifPanel();
+    panel.style.display = 'block';
+    notifOpen = true;
+  }
+}
+
+function closeNotif() {
+  const panel = document.getElementById('notifPanel');
+  panel.classList.add('closing');
+  setTimeout(() => {
+    panel.style.display = 'none';
+    panel.classList.remove('closing');
+    notifOpen = false;
+  }, 140);
+}
+
+// Close panel when clicking outside
 document.addEventListener('click', (e) => {
-  if (!e.target.closest('.badge') && !e.target.closest('.badge-popup')) {
-    document.querySelectorAll('.badge-popup').forEach(p => p.classList.remove('show'));
-    activeBadgePopup = null;
+  if (notifOpen && !document.getElementById('notifBtn').contains(e.target) && !document.getElementById('notifPanel').contains(e.target)) {
+    closeNotif();
   }
 });
+
 </script>
 </body>
 </html>
