@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WorkPulse — Valmet Lentokentänkatu</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0f14;
+    --surface: #131920;
+    --surface2: #1a2330;
+    --border: #1f2d3d;
+    --teal: #00c49a;
+    --teal-dim: #00c49a22;
+    --amber: #f5a623;
+    --amber-dim: #f5a62322;
+    --red: #e05c5c;
+    --blue: #4a9eff;
+    --text: #e8edf2;
+    --muted: #5a7080;
+    --mono: 'DM Mono', monospace;
+    --head: 'Syne', sans-serif;
+    --body: 'DM Sans', sans-serif;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity:0.3;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .wrap { position:relative; z-index:1; max-width:1280px; margin:0 auto; padding:24px; }
+
+  /* HEADER */
+  header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding-bottom:20px; border-bottom:1px solid var(--border);
+    margin-bottom:24px;
+  }
+  .logo { display:flex; align-items:center; gap:12px; }
+  .logo-mark {
+    width:36px; height:36px; border-radius:8px;
+    background:linear-gradient(135deg, var(--teal), #0099ff);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--head); font-weight:800; font-size:16px; color:#000;
+  }
+  .logo-text { font-family:var(--head); font-size:18px; font-weight:700; }
+  .logo-sub { font-size:11px; color:var(--muted); font-family:var(--mono); margin-top:1px; }
+
+  .header-meta { display:flex; align-items:center; gap:20px; }
+  .live-pill {
+    display:flex; align-items:center; gap:6px;
+    background:var(--teal-dim); border:1px solid var(--teal);
+    border-radius:20px; padding:4px 12px;
+    font-size:11px; font-family:var(--mono); color:var(--teal); letter-spacing:0.05em;
+  }
+  .live-dot {
+    width:7px; height:7px; border-radius:50%; background:var(--teal);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+
+  .clock { font-family:var(--mono); font-size:13px; color:var(--muted); }
+
+  /* TABS */
+  .tabs { display:flex; gap:4px; margin-bottom:20px; background:var(--surface); border-radius:10px; padding:4px; width:fit-content; }
+  .tab {
+    padding:7px 18px; border-radius:7px; font-size:13px; font-weight:500; cursor:pointer;
+    transition:all 0.2s; border:none; background:transparent; color:var(--muted); font-family:var(--body);
+  }
+  .tab.active { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
+  .tab:hover:not(.active) { color:var(--text); }
+
+  /* NUDGE BANNER */
+  .nudge-banner {
+    background:linear-gradient(135deg, #0d2a1e, #0b1e2e);
+    border:1px solid var(--teal);
+    border-radius:12px; padding:16px 20px;
+    display:flex; align-items:flex-start; gap:16px;
+    margin-bottom:20px;
+    position:relative; overflow:hidden;
+    animation: fadeSlide 0.6s ease both;
+  }
+  .nudge-banner::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg, transparent, var(--teal), transparent);
+  }
+  @keyframes fadeSlide { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+  .nudge-icon { font-size:28px; flex-shrink:0; margin-top:2px; }
+  .nudge-body {}
+  .nudge-label { font-size:10px; font-family:var(--mono); color:var(--teal); letter-spacing:0.1em; margin-bottom:4px; }
+  .nudge-text { font-size:14px; line-height:1.5; }
+  .nudge-text strong { color:var(--teal); }
+  .nudge-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .nudge-tag {
+    font-size:11px; font-family:var(--mono); padding:3px 10px; border-radius:4px;
+    background:var(--teal-dim); border:1px solid var(--teal); color:var(--teal);
+  }
+  .nudge-tag.amber { background:var(--amber-dim); border-color:var(--amber); color:var(--amber); }
+
+  /* MAIN GRID */
+  .main-grid { display:grid; grid-template-columns:1fr 360px; gap:16px; }
+
+  /* FLOOR MAP */
+  .floor-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:20px;
+  }
+  .card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .card-title { font-family:var(--head); font-size:14px; font-weight:700; }
+  .card-sub { font-size:11px; color:var(--muted); font-family:var(--mono); margin-top:2px; }
+
+  .layer-btns { display:flex; gap:4px; }
+  .layer-btn {
+    padding:4px 10px; border-radius:5px; font-size:11px; font-family:var(--mono);
+    cursor:pointer; border:1px solid var(--border); background:transparent; color:var(--muted);
+    transition:all 0.2s;
+  }
+  .layer-btn.on { background:var(--surface2); color:var(--text); border-color:var(--teal); }
+
+  .floor-map {
+    background:var(--surface2); border-radius:8px; padding:20px;
+    position:relative; min-height:400px;
+  }
+
+  /* ZONES */
+  .zone {
+    position:absolute; border-radius:6px; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    transition:all 0.3s; border:1px solid transparent;
+    font-family:var(--mono); font-size:10px; text-align:center;
+    overflow:hidden;
+  }
+  .zone:hover { transform:scale(1.03); z-index:10; border-color:white !important; }
+  .zone-name { font-size:9px; opacity:0.8; line-height:1.2; }
+  .zone-pct { font-size:13px; font-weight:500; line-height:1; margin-bottom:2px; }
+
+  .zone-tooltip {
+    position:fixed; background:#1a2d40; border:1px solid var(--teal);
+    border-radius:8px; padding:10px 14px; font-size:12px; pointer-events:none;
+    z-index:100; opacity:0; transition:opacity 0.15s; min-width:160px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  }
+  .zone-tooltip.show { opacity:1; }
+  .tt-name { font-family:var(--head); font-weight:700; font-size:13px; margin-bottom:6px; }
+  .tt-row { display:flex; justify-content:space-between; gap:20px; margin-top:3px; font-size:11px; }
+  .tt-label { color:var(--muted); }
+  .tt-val { color:var(--text); font-family:var(--mono); }
+
+  /* LEGEND */
+  .legend { display:flex; gap:12px; margin-top:14px; flex-wrap:wrap; }
+  .leg-item { display:flex; align-items:center; gap:5px; font-size:11px; font-family:var(--mono); color:var(--muted); }
+  .leg-swatch { width:12px; height:12px; border-radius:2px; }
+
+  /* RIGHT COLUMN */
+  .right-col { display:flex; flex-direction:column; gap:16px; }
+
+  /* FORECAST CARD */
+  .forecast-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;
+  }
+  .day-row { display:grid; grid-template-columns:repeat(5,1fr); gap:4px; margin-top:12px; }
+  .day-cell {
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    padding:10px 4px; border-radius:8px; background:var(--surface2);
+    border:1px solid transparent; cursor:pointer; transition:all 0.2s;
+    font-family:var(--mono);
+  }
+  .day-cell:hover { border-color:var(--border); }
+  .day-cell.today { border-color:var(--teal); background:#0d2a1e; }
+  .day-cell.peak { border-color:var(--amber); background:#1f1800; }
+  .day-label { font-size:9px; color:var(--muted); letter-spacing:0.05em; }
+  .day-pct { font-size:15px; font-weight:500; }
+  .day-bar { width:28px; height:4px; border-radius:2px; background:var(--border); overflow:hidden; }
+  .day-fill { height:100%; border-radius:2px; transition:width 0.6s ease; }
+  .day-tag { font-size:8px; padding:1px 5px; border-radius:3px; font-family:var(--mono); }
+
+  /* STATS GRID */
+  .stats-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;
+  }
+  .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+  .stat-box {
+    background:var(--surface2); border-radius:8px; padding:12px;
+    border:1px solid var(--border);
+  }
+  .stat-val { font-family:var(--head); font-size:22px; font-weight:800; }
+  .stat-val.teal { color:var(--teal); }
+  .stat-val.amber { color:var(--amber); }
+  .stat-val.blue { color:var(--blue); }
+  .stat-label { font-size:10px; color:var(--muted); font-family:var(--mono); margin-top:3px; line-height:1.4; }
+
+  /* FM CARD */
+  .fm-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;
+  }
+  .fm-row {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 0; border-bottom:1px solid var(--border); font-size:13px;
+  }
+  .fm-row:last-child { border-bottom:none; }
+  .fm-service { display:flex; align-items:center; gap:8px; }
+  .fm-icon { width:28px; height:28px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:14px; }
+  .fm-status {
+    font-size:11px; font-family:var(--mono); padding:3px 8px; border-radius:4px;
+  }
+  .fm-status.adjusted { background:var(--teal-dim); color:var(--teal); border:1px solid var(--teal); }
+  .fm-status.fixed { background:#1f1800; color:var(--amber); border:1px solid var(--amber); }
+  .fm-saving { font-size:11px; color:var(--teal); font-family:var(--mono); }
+
+  /* VIEW PANELS */
+  .panel { display:none; }
+  .panel.active { display:contents; }
+
+  /* BOTTOM BAR */
+  .bottom-bar {
+    margin-top:20px; padding-top:16px; border-top:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:11px; font-family:var(--mono); color:var(--muted);
+  }
+  .bottom-bar span { display:flex; align-items:center; gap:6px; }
+  .dot-green { width:6px; height:6px; border-radius:50%; background:var(--teal); display:inline-block; }
+
+  /* WEEK CHART */
+  .week-chart { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; }
+  .bar-chart { display:flex; align-items:flex-end; gap:8px; height:160px; margin-top:16px; }
+  .bar-group { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .bar-wrap { width:100%; display:flex; gap:2px; align-items:flex-end; flex:1; }
+  .bar {
+    flex:1; border-radius:3px 3px 0 0; min-height:4px; transition:height 0.6s ease;
+    cursor:pointer; position:relative;
+  }
+  .bar:hover::after {
+    content:attr(data-tip);
+    position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%);
+    background:#1a2d40; border:1px solid var(--teal); border-radius:4px;
+    padding:4px 8px; font-size:10px; white-space:nowrap; color:var(--text);
+    font-family:var(--mono); pointer-events:none; z-index:20;
+  }
+  .bar.rooms { background:linear-gradient(180deg, var(--blue), #2266aa); }
+  .bar.desks { background:linear-gradient(180deg, var(--teal), #008866); }
+  .bar-label { font-size:10px; font-family:var(--mono); color:var(--muted); }
+  .bar-day-peak .bar-label { color:var(--amber); }
+  .peak-marker {
+    font-size:8px; font-family:var(--mono); color:var(--amber); padding:2px 5px;
+    background:var(--amber-dim); border-radius:3px; border:1px solid var(--amber);
+  }
+  .chart-legend { display:flex; gap:16px; margin-top:10px; }
+  .cl-item { display:flex; align-items:center; gap:5px; font-size:11px; font-family:var(--mono); color:var(--muted); }
+  .cl-swatch { width:10px; height:10px; border-radius:2px; }
+
+  /* ZONE COMPARE */
+  .compare-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; }
+  .compare-bar { margin-top:12px; }
+  .cb-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .cb-label { font-size:12px; font-family:var(--mono); width:130px; flex-shrink:0; }
+  .cb-track { flex:1; height:20px; background:var(--surface2); border-radius:4px; overflow:hidden; position:relative; border:1px solid var(--border); }
+  .cb-fill { height:100%; border-radius:4px; transition:width 1s ease; display:flex; align-items:center; padding-left:8px; }
+  .cb-fill span { font-size:11px; font-family:var(--mono); color:#000; font-weight:500; }
+  .cb-val { font-size:13px; font-family:var(--mono); width:44px; text-align:right; }
+
+  @keyframes enterUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .anim { animation:enterUp 0.5s ease both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo">
+      <div class="logo-mark">WP</div>
+      <div>
+        <div class="logo-text">WorkPulse</div>
+        <div class="logo-sub">VALMET — LENTOKENTÄNKATU · MOD30</div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="live-pill"><div class="live-dot"></div>LIVE DEMO</div>
+      <div class="clock" id="clock">—</div>
+    </div>
+  </header>
+
+  <!-- NUDGE BANNER -->
+  <div class="nudge-banner" id="nudgeBanner">
+    <div class="nudge-icon">☀️</div>
+    <div class="nudge-body">
+      <div class="nudge-label">▸ MORNING BRIEFING · TEAMS BOT</div>
+      <div class="nudge-text" id="nudgeText"></div>
+      <div class="nudge-tags" id="nudgeTags"></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('floormap',this)">Floor Map</button>
+    <button class="tab" onclick="switchTab('weekview',this)">Weekly Pattern</button>
+    <button class="tab" onclick="switchTab('zones',this)">Zone Intelligence</button>
+    <button class="tab" onclick="switchTab('fm',this)">FM Dashboard</button>
+  </div>
+
+  <!-- ═══ TAB: FLOOR MAP ═══ -->
+  <div id="tab-floormap" class="panel active">
+    <div class="main-grid">
+      <div class="floor-card anim">
+        <div class="card-header">
+          <div>
+            <div class="card-title">MOD30 — Floor 2 Live Occupancy</div>
+            <div class="card-sub">HOVER ZONES FOR DETAILS · CLICK LAYER TO SWITCH VIEW</div>
+          </div>
+          <div class="layer-btns">
+            <button class="layer-btn on" onclick="setLayer('util',this)">Utilisation</button>
+            <button class="layer-btn" onclick="setLayer('type',this)">Zone Type</button>
+          </div>
+        </div>
+        <div class="floor-map" id="floorMap">
+          <!-- zones injected by JS -->
+        </div>
+        <div class="legend" id="mapLegend"></div>
+      </div>
+
+      <div class="right-col">
+        <!-- FORECAST -->
+        <div class="forecast-card anim" style="animation-delay:0.1s">
+          <div class="card-header">
+            <div>
+              <div class="card-title">5-Day Forecast</div>
+              <div class="card-sub">DAY-OF-WEEK MODEL + SEASONAL</div>
+            </div>
+          </div>
+          <div class="day-row" id="dayRow"></div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-card anim" style="animation-delay:0.2s">
+          <div class="card-header">
+            <div class="card-title">Key Findings</div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-val teal">51.5%</div>
+              <div class="stat-label">84-zone named desk utilisation</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val amber">24.8%</div>
+              <div class="stat-label">Generic numbered desk utilisation</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val teal">2×</div>
+              <div class="stat-label">Users self-sort to good zones already</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val blue">3/628</div>
+              <div class="stat-label">Days ever exceeding 45% combined</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB: WEEKLY PATTERN ═══ -->
+  <div id="tab-weekview" class="panel">
+    <div class="main-grid">
+      <div class="week-chart anim">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Weekly Utilisation Pattern</div>
+            <div class="card-sub">3-YEAR AVERAGE · ROOMS VS DESKS</div>
+          </div>
+        </div>
+        <div class="bar-chart" id="barChart"></div>
+        <div class="chart-legend">
+          <div class="cl-item"><div class="cl-swatch" style="background:var(--blue)"></div>Meeting Rooms</div>
+          <div class="cl-item"><div class="cl-swatch" style="background:var(--teal)"></div>Desks</div>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="stats-card anim" style="animation-delay:0.1s">
+          <div class="card-header"><div class="card-title">Pattern Insights</div></div>
+          <div style="margin-top:12px; display:flex; flex-direction:column; gap:10px;">
+            <div class="stat-box">
+              <div class="stat-val amber">Tuesday</div>
+              <div class="stat-label">Peak day — every single year in dataset</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val teal">Friday</div>
+              <div class="stat-label">Quietest day — 18% rooms / 14% desks avg</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val blue">Never full</div>
+              <div class="stat-label">Building capacity always available — no day ever ran short</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB: ZONE INTELLIGENCE ═══ -->
+  <div id="tab-zones" class="panel">
+    <div class="main-grid">
+      <div class="compare-card anim">
+        <div class="card-header">
+          <div class="card-title">Zone Utilisation Comparison</div>
+          <div class="card-sub">NAMED 84-ZONES vs GENERIC DESKS</div>
+        </div>
+        <div class="compare-bar" id="compareBar"></div>
+      </div>
+
+      <div class="right-col">
+        <div class="stats-card anim" style="animation-delay:0.1s">
+          <div class="card-header"><div class="card-title">What This Means</div></div>
+          <div style="margin-top:12px; font-size:13px; line-height:1.8; color:#8aa0b0;">
+            <p>Users have <strong style="color:var(--teal)">already figured out</strong> where the good desks are — they just don't know they know it.</p>
+            <br>
+            <p>Newcomers have <strong style="color:var(--amber)">no way to access</strong> this knowledge — they default to generic desks and get a worse experience.</p>
+            <br>
+            <p>A nudge system closes this gap at <strong style="color:var(--teal)">near-zero cost</strong> because the model is already trained in the data.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB: FM DASHBOARD ═══ -->
+  <div id="tab-fm" class="panel">
+    <div class="main-grid">
+      <div class="fm-card anim">
+        <div class="card-header">
+          <div class="card-title">FM Operations — Today's Forecast View</div>
+          <div class="card-sub">DYNAMIC STAFFING BASED ON PREDICTED OCCUPANCY</div>
+        </div>
+
+        <div style="margin-top:4px;">
+          <div style="font-size:11px; font-family:var(--mono); color:var(--muted); margin-bottom:12px; padding:8px 12px; background:var(--surface2); border-radius:6px; border-left:3px solid var(--teal);">
+            FORECAST TODAY — <span style="color:var(--text)" id="fmDay"></span> · Expected <span style="color:var(--teal)" id="fmPeople"></span> people · Rooms <span style="color:var(--teal)" id="fmRooms"></span> · Desks <span style="color:var(--teal)" id="fmDesks"></span>
+          </div>
+
+          <div class="fm-row">
+            <div class="fm-service">
+              <div class="fm-icon" style="background:#1a2e20">🧹</div>
+              <div>
+                <div style="font-size:13px;">Cleaning</div>
+                <div style="font-size:11px; color:var(--muted); font-family:var(--mono);">Dynamic schedule based on headcount</div>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <div class="fm-status adjusted" id="cleanStatus">ADJUSTED</div>
+              <div class="fm-saving" id="cleanSaving"></div>
+            </div>
+          </div>
+
+          <div class="fm-row">
+            <div class="fm-service">
+              <div class="fm-icon" style="background:#1a1e2e">☕</div>
+              <div>
+                <div style="font-size:13px;">Catering</div>
+                <div style="font-size:11px; color:var(--muted); font-family:var(--mono);">Order quantity matched to attendance</div>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <div class="fm-status adjusted" id="caterStatus">ADJUSTED</div>
+              <div class="fm-saving" id="caterSaving"></div>
+            </div>
+          </div>
+
+          <div class="fm-row">
+            <div class="fm-service">
+              <div class="fm-icon" style="background:#2a1a1a">🚪</div>
+              <div>
+                <div style="font-size:13px;">Access Control</div>
+                <div style="font-size:11px; color:var(--muted); font-family:var(--mono);">Evening lock-down schedule</div>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <div class="fm-status" id="accessStatus">FIXED SCHEDULE</div>
+              <div class="fm-saving" style="color:var(--amber); font-size:11px; font-family:var(--mono)">→ OPTIMISE IN PHASE 2</div>
+            </div>
+          </div>
+
+          <div class="fm-row">
+            <div class="fm-service">
+              <div class="fm-icon" style="background:#0d1e2a">❄️</div>
+              <div>
+                <div style="font-size:13px;">HVAC Zones</div>
+                <div style="font-size:11px; color:var(--muted); font-family:var(--mono);">Activate only occupied zones</div>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <div class="fm-status adjusted">ADJUSTED</div>
+              <div class="fm-saving" id="hvacSaving"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px; padding:14px; background:var(--surface2); border-radius:8px; border:1px solid var(--border);">
+          <div style="font-size:10px; font-family:var(--mono); color:var(--muted); margin-bottom:8px;">SENSOR ALERT</div>
+          <div style="font-size:13px; display:flex; align-items:center; gap:8px;">
+            <span style="color:var(--red)">⚠</span>
+            <span><strong style="color:var(--red)">2.krs Neukkari</strong> — sensor battery at 2% · Last ping Feb 2026 · <span style="color:var(--muted)">Maintenance ticket recommended</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="stats-card anim" style="animation-delay:0.1s">
+          <div class="card-header"><div class="card-title">Current vs Optimised</div></div>
+          <div class="stats-grid" style="margin-top:12px;">
+            <div class="stat-box">
+              <div class="stat-val amber" style="font-size:18px;">Fixed</div>
+              <div class="stat-label">Cleaning runs regardless of 40 or 140 people</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val teal" style="font-size:18px;">Dynamic</div>
+              <div class="stat-label">Service levels matched to actual demand</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val teal">~20%</div>
+              <div class="stat-label">Estimated service cost reduction (low days)</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val blue">Day 1</div>
+              <div class="stat-label">Model is trained — deploy immediately</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span><div class="dot-green"></div>Sensor data · Valmet Lentokentänkatu · 389 sensors · 628 days</span>
+    <span>Built at Hackathon 2026 · WorkPulse MVP v0.1</span>
+  </div>
+
+</div>
+
+<!-- TOOLTIP -->
+<div class="zone-tooltip" id="tooltip"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+const TODAY_IDX = new Date().getDay(); // 0=Sun,1=Mon...5=Fri
+const DAYS = ['Mon','Tue','Wed','Thu','Fri'];
+const DAY_DATA = [
+  { rooms:28, desks:26, label:'Mon' },
+  { rooms:38, desks:33, label:'Tue', peak:true },
+  { rooms:32, desks:29, label:'Wed' },
+  { rooms:24, desks:22, label:'Thu' },
+  { rooms:18, desks:14, label:'Fri' },
+];
+
+// Map JS getDay (1=Mon,2=Tue...5=Fri) to our array index
+const jsToIdx = {1:0,2:1,3:2,4:3,5:4};
+const todayIdx = jsToIdx[TODAY_IDX] !== undefined ? jsToIdx[TODAY_IDX] : 0;
+
+const ZONES = [
+  // Hot zones — named 84-zone desks
+  { id:'coffee', name:'Coffee Lounge', type:'lounge', util:62, cap:20, sensor:96, x:4, y:4, w:22, h:14 },
+  { id:'k11', name:'K11', type:'booth', util:58, cap:4, sensor:91, x:28, y:4, w:10, h:14 },
+  { id:'k12', name:'K12', type:'booth', util:56, cap:4, sensor:90, x:40, y:4, w:10, h:14 },
+  { id:'k13', name:'K13', type:'booth', util:54, cap:4, sensor:89, x:52, y:4, w:10, h:14 },
+  { id:'k14', name:'K14', type:'booth', util:52, cap:4, sensor:88, x:64, y:4, w:10, h:14 },
+  // Named meeting rooms
+  { id:'norppa', name:'Norppa', type:'meeting', util:44, cap:8, sensor:87, x:4, y:22, w:18, h:20 },
+  { id:'karhu', name:'Karhu', type:'meeting', util:41, cap:10, sensor:86, x:24, y:22, w:20, h:20 },
+  { id:'hirvi', name:'Hirvi', type:'meeting', util:38, cap:8, sensor:85, x:46, y:22, w:18, h:20 },
+  { id:'mustikka', name:'Mustikka', type:'meeting', util:35, cap:6, sensor:84, x:66, y:22, w:18, h:20 },
+  // Open desks — 84-zone
+  { id:'zone84a', name:'84-Zone A', type:'desk84', util:53, cap:30, sensor:91, x:4, y:46, w:38, h:18 },
+  { id:'zone84b', name:'84-Zone B', type:'desk84', util:50, cap:28, sensor:88, x:44, y:46, w:40, h:18 },
+  // Generic numbered desks
+  { id:'gen1', name:'Desk Area 1–40', type:'generic', util:25, cap:40, sensor:74, x:4, y:68, w:38, h:16 },
+  { id:'gen2', name:'Desk Area 41–80', type:'generic', util:24, cap:40, sensor:72, x:44, y:68, w:40, h:16 },
+  // Räme — low activity
+  { id:'rame', name:'Räme', type:'meeting', util:18, cap:6, sensor:83, x:78, y:4, w:18, h:18 },
+  { id:'k8', name:'K8', type:'booth', util:22, cap:4, sensor:84, x:78, y:24, w:18, h:14 },
+];
+
+// ── COLOUR HELPERS ────────────────────────────────────────────────────────────
+
+function utilColor(u) {
+  if (u >= 55) return { bg:'#0d2a1e', border:'#00c49a', text:'#00c49a' };
+  if (u >= 40) return { bg:'#162a14', border:'#5cba6a', text:'#5cba6a' };
+  if (u >= 28) return { bg:'#1a2610', border:'#8aaf5a', text:'#8aaf5a' };
+  if (u >= 18) return { bg:'#1f2010', border:'#c8a840', text:'#c8a840' };
+  return { bg:'#220c0c', border:'#e05c5c', text:'#e05c5c' };
+}
+
+function typeColor(t) {
+  const map = {
+    lounge:{ bg:'#1a2040', border:'#4a9eff', text:'#4a9eff' },
+    booth:{ bg:'#2a1a40', border:'#9a7aff', text:'#9a7aff' },
+    meeting:{ bg:'#1a2a28', border:'#40b09a', text:'#40b09a' },
+    desk84:{ bg:'#1a2a18', border:'#6ab860', text:'#6ab860' },
+    generic:{ bg:'#1e1a14', border:'#807060', text:'#807060' },
+  };
+  return map[t] || map.generic;
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+
+let layer = 'util';
+const tooltip = document.getElementById('tooltip');
+
+// ── FLOOR MAP ─────────────────────────────────────────────────────────────────
+
+function buildFloorMap() {
+  const map = document.getElementById('floorMap');
+  map.innerHTML = '';
+
+  ZONES.forEach(z => {
+    const c = layer === 'util' ? utilColor(z.util) : typeColor(z.type);
+    const el = document.createElement('div');
+    el.className = 'zone';
+    el.style.cssText = `
+      left:${z.x}%; top:${z.y}%; width:${z.w}%; height:${z.h}%;
+      background:${c.bg}; border-color:${c.border}; color:${c.text};
+    `;
+    el.innerHTML = `
+      <div class="zone-pct">${z.util}%</div>
+      <div class="zone-name">${z.name}</div>
+    `;
+
+    el.addEventListener('mousemove', (e) => {
+      tooltip.innerHTML = `
+        <div class="tt-name">${z.name}</div>
+        <div class="tt-row"><span class="tt-label">Utilisation</span><span class="tt-val">${z.util}%</span></div>
+        <div class="tt-row"><span class="tt-label">Capacity</span><span class="tt-val">${z.cap} people</span></div>
+        <div class="tt-row"><span class="tt-label">Sensor battery</span><span class="tt-val">${z.sensor}%</span></div>
+        <div class="tt-row"><span class="tt-label">Zone type</span><span class="tt-val">${z.type}</span></div>
+      `;
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top = (e.clientY - 10) + 'px';
+      tooltip.classList.add('show');
+    });
+    el.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+    map.appendChild(el);
+  });
+
+  buildLegend();
+}
+
+function buildLegend() {
+  const leg = document.getElementById('mapLegend');
+  if (layer === 'util') {
+    leg.innerHTML = [
+      { c:'#00c49a', l:'Hot ≥55%' },
+      { c:'#5cba6a', l:'Active 40–54%' },
+      { c:'#8aaf5a', l:'Moderate 28–39%' },
+      { c:'#c8a840', l:'Light 18–27%' },
+      { c:'#e05c5c', l:'Quiet <18%' },
+    ].map(i=>`<div class="leg-item"><div class="leg-swatch" style="background:${i.c}"></div>${i.l}</div>`).join('');
+  } else {
+    leg.innerHTML = [
+      { c:'#4a9eff', l:'Lounge' },
+      { c:'#9a7aff', l:'K-Booth' },
+      { c:'#40b09a', l:'Meeting' },
+      { c:'#6ab860', l:'84-Zone Desk' },
+      { c:'#807060', l:'Generic Desk' },
+    ].map(i=>`<div class="leg-item"><div class="leg-swatch" style="background:${i.c}"></div>${i.l}</div>`).join('');
+  }
+}
+
+function setLayer(l, btn) {
+  layer = l;
+  document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  buildFloorMap();
+}
+
+// ── FORECAST ─────────────────────────────────────────────────────────────────
+
+function buildDayRow() {
+  const row = document.getElementById('dayRow');
+  row.innerHTML = '';
+  DAY_DATA.forEach((d, i) => {
+    const isToday = i === todayIdx;
+    const el = document.createElement('div');
+    el.className = 'day-cell' + (isToday ? ' today' : '') + (d.peak ? ' peak' : '');
+    el.innerHTML = `
+      <div class="day-label">${d.label.toUpperCase()}</div>
+      <div class="day-pct" style="color:${d.peak ? 'var(--amber)' : isToday ? 'var(--teal)' : 'var(--text)'}">${d.rooms}%</div>
+      <div class="day-bar"><div class="day-fill" style="width:${d.rooms*2}%;background:${d.peak ? 'var(--amber)' : 'var(--teal)'}"></div></div>
+      ${d.peak ? '<div class="day-tag" style="background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber)">PEAK</div>' : ''}
+      ${isToday && !d.peak ? '<div class="day-tag" style="background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal)">TODAY</div>' : ''}
+    `;
+    row.appendChild(el);
+  });
+}
+
+// ── NUDGE BANNER ──────────────────────────────────────────────────────────────
+
+function buildNudge() {
+  const td = DAY_DATA[todayIdx];
+  const dayName = ['Monday','Tuesday','Wednesday','Thursday','Friday'][todayIdx];
+  const isPeak = td.peak;
+  const people = Math.round((td.rooms / 100) * 197 + (td.desks / 100) * 241);
+
+  document.getElementById('nudgeText').innerHTML = isPeak
+    ? `<strong>Today is ${dayName} — PEAK DAY.</strong> Forecast: <strong>~${td.rooms}% rooms</strong> / <strong>~${td.desks}% desks</strong>. Hot zones filling fast — arrive before 9 AM or after 2 PM for best availability.`
+    : `Today is ${dayName}. Forecast: <strong>~${td.rooms}% rooms</strong> / <strong>~${td.desks}% desks</strong>. Comfortable day — good availability across all zones.`;
+
+  const tags = document.getElementById('nudgeTags');
+  tags.innerHTML = '';
+  [
+    { t:`~${people} people expected`, cls:'' },
+    { t:'Hot: Coffee Lounge · K11–K14', cls:'' },
+    { t:'Quiet: Räme · K8 · Generic desks', cls:'amber' },
+    isPeak ? { t:'⚡ Peak day — arrive early', cls:'amber' } : null,
+  ].filter(Boolean).forEach(tag => {
+    const span = document.createElement('span');
+    span.className = 'nudge-tag ' + tag.cls;
+    span.textContent = tag.t;
+    tags.appendChild(span);
+  });
+}
+
+// ── WEEK CHART ────────────────────────────────────────────────────────────────
+
+function buildBarChart() {
+  const chart = document.getElementById('barChart');
+  if (!chart) return;
+  chart.innerHTML = '';
+  const maxVal = 45;
+
+  DAY_DATA.forEach((d, i) => {
+    const isPeak = d.peak;
+    const isToday = i === todayIdx;
+    const grp = document.createElement('div');
+    grp.className = 'bar-group' + (isPeak ? ' bar-day-peak' : '');
+
+    const rh = (d.rooms / maxVal * 140);
+    const dh = (d.desks / maxVal * 140);
+
+    grp.innerHTML = `
+      <div class="bar-wrap">
+        <div class="bar rooms" data-tip="Rooms: ${d.rooms}%" style="height:${rh}px"></div>
+        <div class="bar desks" data-tip="Desks: ${d.desks}%" style="height:${dh}px"></div>
+      </div>
+      <div class="bar-label" style="${isToday ? 'color:var(--teal)' : ''}">${d.label}${isPeak ? '★' : ''}</div>
+      ${isPeak ? '<span class="peak-marker">PEAK</span>' : ''}
+    `;
+    chart.appendChild(grp);
+  });
+}
+
+// ── ZONE COMPARE ─────────────────────────────────────────────────────────────
+
+function buildCompare() {
+  const container = document.getElementById('compareBar');
+  if (!container) return;
+
+  const zones = [
+    { label:'Coffee Lounge', val:62, color:'var(--teal)' },
+    { label:'K11–K14 Booths', val:55, color:'var(--teal)' },
+    { label:'84-Zone A', val:53, color:'#6ab860' },
+    { label:'84-Zone B', val:50, color:'#6ab860' },
+    { label:'Named Meetings', val:39, color:'var(--blue)' },
+    { label:'Generic Desk 1–40', val:25, color:'var(--amber)' },
+    { label:'Generic Desk 41–80', val:24, color:'var(--amber)' },
+    { label:'Räme', val:18, color:'var(--red)' },
+    { label:'K8', val:22, color:'var(--red)' },
+  ];
+
+  container.innerHTML = zones.map(z => `
+    <div class="cb-row">
+      <div class="cb-label">${z.label}</div>
+      <div class="cb-track">
+        <div class="cb-fill" style="width:${z.val}%;background:${z.color}">
+          <span>${z.val}%</span>
+        </div>
+      </div>
+      <div class="cb-val" style="color:${z.color}">${z.val}%</div>
+    </div>
+  `).join('');
+}
+
+// ── FM PANEL ──────────────────────────────────────────────────────────────────
+
+function buildFM() {
+  const td = DAY_DATA[todayIdx];
+  const dayName = ['Monday','Tuesday','Wednesday','Thursday','Friday'][todayIdx];
+  const people = Math.round((td.rooms / 100) * 197 + (td.desks / 100) * 241);
+
+  const fmDay = document.getElementById('fmDay');
+  const fmPeople = document.getElementById('fmPeople');
+  const fmRooms = document.getElementById('fmRooms');
+  const fmDesks = document.getElementById('fmDesks');
+  if (fmDay) fmDay.textContent = dayName;
+  if (fmPeople) fmPeople.textContent = people;
+  if (fmRooms) fmRooms.textContent = td.rooms + '%';
+  if (fmDesks) fmDesks.textContent = td.desks + '%';
+
+  const isHighDay = td.rooms >= 35;
+  const cleanSaving = document.getElementById('cleanSaving');
+  const caterSaving = document.getElementById('caterSaving');
+  const hvacSaving = document.getElementById('hvacSaving');
+
+  if (cleanSaving) cleanSaving.textContent = isHighDay ? 'Full run · all floors' : '↓ Reduced · floors 1+3 only';
+  if (caterSaving) caterSaving.textContent = isHighDay ? `${people} covers ordered` : `${Math.round(people*0.8)} covers · 20% reduction`;
+  if (hvacSaving) hvacSaving.textContent = isHighDay ? 'All zones active' : '3 zones offline · save ~15%';
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+
+  // Rebuild on first visit
+  if (id === 'weekview') buildBarChart();
+  if (id === 'zones') buildCompare();
+  if (id === 'fm') buildFM();
+}
+
+// ── CLOCK ─────────────────────────────────────────────────────────────────────
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}) + ' · ' +
+    now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+
+buildFloorMap();
+buildDayRow();
+buildNudge();
+buildFM();
+updateClock();
+setInterval(updateClock, 30000);
+</script>
+</body>
+</html>
