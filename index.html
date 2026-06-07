@@ -919,63 +919,11 @@ const ZONES = [
   { id:'gen2', name:'Desks 41–80', type:'generic', util:24, clean:'5×/wk', cleanNum:5, cleanCost:'WASTE', cap:40, sensor:72, x:48, y:70, w:45, h:14 },
 ];
 
-<<<<<<< HEAD
-const NOTIFICATIONS_DATA = [
-  {
-    type: 'sensor', icon: '🪫', title: 'Sensor Battery Critical',
-    msg: '2.krs Neukkari battery at 2%',
-    building: 'A', location: '2.krs · Neukkari',
-    critical: true,
-    details: 'Neukkari-kokoushuoneen sensorin akku on loppumassa. Akun varaus on 2%, joka tarkoittaa että sensori sammuu pian ilman toimenpiteitä. Suositus: vaihda paristo tai koko sensori lähipäivinä.',
-    priority: 4, ticket: 'TICKET-2401', time: '12 min'
-  },
-  {
-    type: 'anomaly', icon: '📈', title: 'Usage Anomaly Detected',
-    msg: 'Friday has 35% higher usage than forecast',
-    building: 'A', location: 'Koko rakennus',
-    critical: false,
-    details: 'Perjantain käyttö poikkeaa historiallisesta mallista — 35% enemmän käyttäjiä kuin ennustettu. Mahdollisesti erikoistapahtumat tai poikkeava työpäivä. Tarkista kalenterivaraukset.',
-    priority: 2, ticket: 'TICKET-2402', time: '1 h'
-  },
-  {
-    type: 'maintenance', icon: '🛠️', title: 'HVAC Maintenance Due',
-    msg: 'Filter change recommended this week',
-    building: 'A', location: 'HVAC-järjestelmä',
-    critical: false,
-    details: 'HVAC-järjestelmän suodatin tulee vaihtaa säännöllisen huollon mukaisesti. Seuraavan viikon aikana suositeltava — pidä huolta ilmanlaadusta.',
-    priority: 2, ticket: 'TICKET-2403', time: '3 h'
-  },
-  {
-    type: 'sensor', icon: '🪫', title: 'Sensor Battery Low',
-    msg: '4.krs Meeting Room battery at 8%',
-    building: 'B', location: '4.krs · Meeting Room',
-    critical: true,
-    details: '4. kerroksen kokoushuoneen sensorin akku on matalalla tasolla (8%). Huolto-ohjelma on aktivoitu — vaihto ehdotus seuraavalla huoltokierroksella.',
-    priority: 3, ticket: 'TICKET-2404', time: '25 min'
-  },
-  {
-    type: 'anomaly', icon: '🚨', title: 'Access Control Issue',
-    msg: 'Door lock malfunction on floor 3',
-    building: 'B', location: '3.krs · Pääovi',
-    critical: true,
-    details: 'Kerroksella 3 olevan oven lukitus on epävakaa. Turvallisuus-tarkastus suositeltava välittömästi — ovi saattaa jäädä auki tai lukkiutua väärin.',
-    priority: 5, ticket: 'TICKET-2405', time: '5 min'
-  },
-  {
-    type: 'maintenance', icon: '🧹', title: 'Extra Cleaning Scheduled',
-    msg: 'Conference rooms — added service',
-    building: 'B', location: 'Konferenssisalit',
-    critical: false,
-    details: 'Konferenssisalien lisäpuhdistus on ohjelmoitu seuraavalle päivälle. Lisäpuhdistus tehdään klo 14:00 jälkeen, ei vaikuta normaaliin aikatauluun.',
-    priority: 1, ticket: 'TICKET-2406', time: '2 h'
-  },
-=======
 const HOLIDAYS = [
   { name:'Juhannus (Midsummer)', date:'Late June', effect:'−35% for 2 weeks', month:6 },
   { name:'Joulu (Christmas)', date:'Dec 23–Jan 2', effect:'−90% for 2 weeks', month:12 },
   { name:'Pääsiäinen (Easter)', date:'Variable April', effect:'−25% for 1 week', month:4 },
   { name:'Vappu (May Day)', date:'Apr 30–May 1', effect:'−15% adjacent days', month:5 },
->>>>>>> origin/main
 ];
 
 const BUILDINGS = [
@@ -1024,242 +972,8 @@ let mapLayer = 'util';
 let weekLayer = 'all';
 const tt = document.getElementById('tt');
 
-<<<<<<< HEAD
-function switchBuilding(building, btn) {
-  currentBuilding = building;
-  document.querySelectorAll('.navbar-item').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-
-  if (building === 'home') {
-    document.querySelectorAll('.tabs').forEach(t => t.style.display = 'flex');
-    buildFloorMap();
-  } else {
-    document.querySelectorAll('.tabs').forEach(t => t.style.display = 'none');
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('tab-floormap').classList.add('active');
-    const floorMap = document.getElementById('floorMap');
-    const name = building === 'buildingA' ? 'Building A' : 'Building B';
-    floorMap.innerHTML = `
-      <div style="display:flex; flex-direction:column; align-items:center;
-                  justify-content:center; height:100%; gap:12px;
-                  font-family:var(--mono); color:var(--muted);">
-        <div style="font-size:48px;">🏢</div>
-        <div style="font-size:18px;">${name} — Floor Map</div>
-        <div style="font-size:12px;">Sensor data available · ${building === 'buildingA' ? '212' : '177'} sensors</div>
-      </div>`;
-  }
-
-  buildNotifications();
-}
-
-function toggleBadgePopup(type) {
-  const popup = document.getElementById(type + 'Popup');
-
-  if (activeBadgePopup === type) {
-    popup.classList.remove('show');
-    activeBadgePopup = null;
-  } else {
-    document.querySelectorAll('.badge-popup').forEach(p => p.classList.remove('show'));
-    activeBadgePopup = type;
-    buildBadgePopup(type);
-    popup.classList.add('show');
-  }
-}
-
-function getFilteredNotifications() {
-  if (currentBuilding === 'buildingA') return NOTIFICATIONS_DATA.filter(n => n.building === 'A');
-  if (currentBuilding === 'buildingB') return NOTIFICATIONS_DATA.filter(n => n.building === 'B');
-  return NOTIFICATIONS_DATA;
-}
-
-function buildBadgePopup(type) {
-  const popup = document.getElementById(type + 'Popup');
-  const notifications = getFilteredNotifications().filter(n => n.type === type);
-
-  const typeMeta = {
-    sensor:      { icon: '🪫', label: 'Sensor Alerts' },
-    anomaly:     { icon: '📈', label: 'Anomalies' },
-    maintenance: { icon: '🛠️', label: 'Maintenance' }
-  };
-  const meta = typeMeta[type];
-
-  popup.innerHTML = `
-    <div class="badge-popup-header">
-      <span>${meta.icon} ${meta.label}</span>
-      <span style="font-family:var(--mono); color:var(--muted); font-size:11px; font-weight:400;">${notifications.length} items</span>
-    </div>
-    ${notifications.length === 0 ? `
-      <div style="padding:24px; text-align:center; color:var(--muted); font-size:12px;">
-        No ${meta.label.toLowerCase()} ${currentBuilding !== 'home' ? 'in ' + (currentBuilding === 'buildingA' ? 'Building A' : 'Building B') : ''}
-      </div>
-    ` : notifications.map(n => `
-      <div class="popup-item">
-        <div class="popup-item-icon notif-icon ${n.type}">${n.icon}</div>
-        <div class="popup-item-content">
-          <div class="popup-item-title">
-            ${n.title}
-            ${n.critical ? '<span style="color:var(--red); font-size:11px;">●</span>' : ''}
-          </div>
-          <div class="popup-item-msg">${n.msg}</div>
-          <div class="popup-item-meta">
-            <span class="building-tag ${n.building}">Building ${n.building}</span>
-            <span>·</span>
-            <span>${n.location}</span>
-            <span>·</span>
-            <span>${n.time} ago</span>
-          </div>
-        </div>
-      </div>
-    `).join('')}
-  `;
-}
-
-function buildBadges() {
-  const container = document.getElementById('badgeContainer');
-  container.innerHTML = '';
-
-  const notifications = getFilteredNotifications();
-  const counts = {
-    sensor:      notifications.filter(n => n.type === 'sensor'),
-    anomaly:     notifications.filter(n => n.type === 'anomaly'),
-    maintenance: notifications.filter(n => n.type === 'maintenance')
-  };
-
-  const badgeMeta = {
-    sensor:      { icon: '🪫', label: 'Sensors' },
-    anomaly:     { icon: '📈', label: 'Anomalies' },
-    maintenance: { icon: '🛠️', label: 'Maintenance' }
-  };
-
-  Object.entries(counts).forEach(([type, items]) => {
-    if (items.length === 0) return;
-
-    const hasCritical = items.some(n => n.critical);
-    const badge = document.createElement('div');
-    badge.className = 'badge' + (hasCritical ? ' alert' : '');
-    badge.title = `${badgeMeta[type].label}: ${items.length}`;
-    badge.onclick = () => toggleBadgePopup(type);
-    badge.innerHTML = `
-      <span style="font-size:18px;">${badgeMeta[type].icon}</span>
-      <span class="badge-count${hasCritical ? '' : ' warn'}">${items.length}</span>
-    `;
-    container.appendChild(badge);
-  });
-}
-
-function getNotificationId(n, idx) {
-  return `notif-${n.building}-${n.type}-${idx}`;
-}
-
-function toggleNotificationDetails(id) {
-  expandedNotificationId = (expandedNotificationId === id) ? null : id;
-  buildNotifications();
-}
-
-function buildNotifications() {
-  const container = document.getElementById('notificationsContainer');
-  container.innerHTML = '';
-
-  const notifications = getFilteredNotifications();
-
-  if (notifications.length === 0) {
-    container.innerHTML = `
-      <div style="padding:24px; text-align:center; color:var(--muted);
-                  background:var(--surface); border:1px solid var(--border);
-                  border-radius:12px; font-size:13px;">
-        ✓ No notifications ${currentBuilding !== 'home' ? 'in ' + (currentBuilding === 'buildingA' ? 'Building A' : 'Building B') : '— all systems operational'}
-      </div>
-    `;
-    buildBadges();
-    return;
-  }
-
-  notifications.forEach((n, idx) => {
-    const notifId = getNotificationId(n, idx);
-    const isExpanded = expandedNotificationId === notifId;
-
-    const card = document.createElement('div');
-    card.className = 'notif-card' + (n.critical ? ' critical' : '');
-
-    const priorityColor = n.priority >= 4 ? 'var(--red)'
-                        : n.priority >= 3 ? 'var(--amber)'
-                        : 'var(--teal)';
-    const priorityLabel = n.priority >= 4 ? 'URGENT'
-                        : n.priority >= 3 ? 'HIGH'
-                        : n.priority >= 2 ? 'MEDIUM'
-                        : 'LOW';
-
-    card.innerHTML = `
-      <div class="notif-header" onclick="toggleNotificationDetails('${notifId}')">
-        <div class="notif-icon ${n.type}">${n.icon}</div>
-        <div style="flex:1; min-width:0;">
-          <div class="notif-meta">
-            <span class="building-tag ${n.building}">Building ${n.building}</span>
-            <span class="notif-type">${n.type.toUpperCase()}</span>
-            <span class="notif-type">·</span>
-            <span class="notif-type">${n.location}</span>
-            <span class="notif-type">·</span>
-            <span class="notif-type">${n.time} ago</span>
-          </div>
-          <div class="notif-title">${n.title}</div>
-          <div class="notif-msg">${n.msg}</div>
-        </div>
-        <div class="notif-arrow" style="transform: rotate(${isExpanded ? 90 : 0}deg);">▶</div>
-      </div>
-
-      ${isExpanded ? `
-        <div class="notif-details">
-          <div class="notif-text">${n.details}</div>
-
-          <div class="notif-details-grid">
-            <div class="detail-block">
-              <div class="detail-label">BUILDING</div>
-              <div class="detail-value" style="color: ${n.building === 'A' ? 'var(--teal)' : 'var(--blue)'};">
-                Building ${n.building}
-              </div>
-            </div>
-            <div class="detail-block">
-              <div class="detail-label">LOCATION</div>
-              <div class="detail-value" style="font-size:11px;">${n.location}</div>
-            </div>
-            <div class="detail-block">
-              <div class="detail-label">PRIORITY</div>
-              <div class="detail-value" style="color: ${priorityColor};">
-                ${priorityLabel} · ${n.priority}/5
-              </div>
-            </div>
-            <div class="detail-block">
-              <div class="detail-label">TICKET</div>
-              <div class="detail-value" style="color: var(--text); text-decoration:underline; text-decoration-style:dotted;">
-                ${n.ticket}
-              </div>
-            </div>
-            <div class="detail-block">
-              <div class="detail-label">TYPE</div>
-              <div class="detail-value" style="text-transform: capitalize;">${n.type}</div>
-            </div>
-            <div class="detail-block">
-              <div class="detail-label">STATUS</div>
-              <div class="detail-value" style="color: ${n.critical ? 'var(--red)' : 'var(--amber)'};">
-                ${n.critical ? '● Critical' : '○ Pending'}
-              </div>
-            </div>
-          </div>
-        </div>
-      ` : ''}
-    `;
-
-    container.appendChild(card);
-  });
-
-  buildBadges();
-}
-
-function buildFloorMap() {
-=======
 // ═══ FLOOR MAP ════════════════════════════════════════════
 function buildMap() {
->>>>>>> origin/main
   const map = document.getElementById('floorMap');
   // Remove old zones but keep grid
   map.querySelectorAll('.fzone').forEach(e=>e.remove());
@@ -1380,16 +1094,6 @@ function buildBarChart() {
   DAYS_DATA.forEach((d,i) => {
     const isToday = i===todayIdx;
     const grp = document.createElement('div');
-<<<<<<< HEAD
-    grp.className = 'bar-group' + (isPeak ? ' bar-day-peak' : '');
-
-    const rh = (d.rooms / maxVal * 140);
-    const dh = (d.desks / maxVal * 140);
-
-    const roomsColor = getUtilColor(d.rooms);
-    const desksColor = getUtilColor(d.desks);
-
-=======
     grp.className = 'bgrp'+(d.peak?' bgrp-peak':'');
     let barsHTML = '';
     if (weekLayer==='all'||weekLayer==='occ') {
@@ -1401,7 +1105,6 @@ function buildBarChart() {
       const sh = d.sla/maxV*140;
       barsHTML += `<div class="bar sla" data-t="SLA violations: ${d.sla}%" style="height:${sh}px"></div>`;
     }
->>>>>>> origin/main
     grp.innerHTML = `
       <div class="bwrap">${barsHTML}</div>
       <div class="blbl${d.peak?' peak':''}"${isToday?` style="color:var(--blue)"`:''}>${d.lbl}</div>
@@ -1419,16 +1122,6 @@ function buildBarChart() {
   }
 }
 
-<<<<<<< HEAD
-function buildTopZones() {
-  const container = document.getElementById('topZonesContainer');
-  if (!container) return;
-
-  const topZones = ZONES.sort((a, b) => b.util - a.util).slice(0, 5);
-
-  container.innerHTML = topZones.map((z, idx) => {
-    const color = utilColor(z.util);
-=======
 function setWeekLayer(l,btn) {
   weekLayer=l;
   document.querySelectorAll('#tab-week .lbtn').forEach(b=>b.classList.remove('on'));
@@ -1472,7 +1165,6 @@ function buildZoneCompare() {
   el.innerHTML = sorted.map(z => {
     const wasteFlag = z.cleanCost==='WASTE' ? ' <span style="color:var(--red);font-size:9px;font-family:var(--mono)">⚠ OVER-SERVICED</span>' : '';
     const col = z.util>=50?'var(--green)':z.util>=35?'var(--blue)':z.util>=20?'var(--amber)':'var(--red)';
->>>>>>> origin/main
     return `
       <div class="cbar-row">
         <div class="cbar-lbl">${z.name}<br><span style="color:var(--muted)">${z.clean}</span>${wasteFlag}</div>
